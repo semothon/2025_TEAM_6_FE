@@ -10,7 +10,6 @@ const LoginHeader = () => {
         <div style={{ display: "flex" }}>
           <Milestone>강의실 안내</Milestone>
           <Milestone>결과보고서 작성</Milestone>
-          <Milestone>알림</Milestone>
           <Milestone>문서보관함</Milestone>
           <Logout>로그인</Logout>
         </div>

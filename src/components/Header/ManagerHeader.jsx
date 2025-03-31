@@ -9,7 +9,6 @@ const ManagerHeader = () => {
         <div style={{ marginLeft: "20px" }}>경희대학교 강의실 대여</div>
         <div style={{ display: "flex" }}>
           <Milestone>강의실 안내</Milestone>
-          <Milestone>알림</Milestone>
           <Milestone>문서보관함</Milestone>
           <Milestone>OOO님</Milestone>
           <Logout>로그아웃</Logout>
