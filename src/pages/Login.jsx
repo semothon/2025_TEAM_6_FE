@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import LoginHeader from "../components/Header/LoginHeader";
+import UserHeader from "../components/Header/UserHeader";
+import ManagerHeader from "../components/Header/ManagerHeader";
+import backgroundImage from "../assets/images/loginBackground.png";
 
 // 로그인 페이지에서 로그인이 되어 있지 않은 상태에서
 // 다른 페이지들을 들어가면 어떻게 되나요 ex. 강의실 안내 외 alert?
@@ -13,7 +16,7 @@ const Login = () => {
 
   return (
     <>
-      <LoginHeader />
+      {activeButton === "user" ? <UserHeader /> : <ManagerHeader />}
       <PageWrapper>
         <Container>
           <div style={{ fontSize: "13px", textAlign: "left" }}>
@@ -76,6 +79,8 @@ const PageWrapper = styled.div`
   align-items: center;
   height: 100vh; /* 뷰포트 전체 높이를 차지 */
   width: 100vw; /* 뷰포트 전체 너비를 차지 */
+  background-image: url(${backgroundImage});
+  background-size: cover;
 `;
 
 const Container = styled.div`
@@ -85,6 +90,7 @@ const Container = styled.div`
   max-width: 1000px;
   margin: 20px auto;
   text-align: center;
+  background-color: #fff;
 `;
 
 const StyledButton = styled.button`

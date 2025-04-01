@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import khu from "../../assets/images/KHU.png";
 
 // 모든 페이지에 있을 헤더
 const ManagerHeader = () => {
@@ -6,7 +7,14 @@ const ManagerHeader = () => {
   return (
     <>
       <MainFrame>
-        <div style={{ marginLeft: "20px" }}>경희대학교 강의실 대여</div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img
+            src={khu}
+            alt="경희대학교"
+            style={{ width: "70px", marginLeft: "20px", marginRight: "10px" }}
+          />
+          <p>경희대학교 강의실 대여</p>
+        </div>
         <div style={{ display: "flex" }}>
           <Milestone>강의실 안내</Milestone>
           <Milestone>문서보관함</Milestone>
