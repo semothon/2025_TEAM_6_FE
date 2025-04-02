@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import rightArrow from "../assets/images/rightArrow.png";
 
-const DocumentTable = () => {
+const DocumentTableCompleted = () => {
   return (
     <TableContainer>
       <Table>
@@ -71,7 +71,7 @@ const DocumentTable = () => {
             </Td>
             <Td>
               <ButtonContainer>
-                <ApprovalButton>승인 대기</ApprovalButton>
+                <RefusalButton>반려</RefusalButton>
               </ButtonContainer>
             </Td>
           </tr>
@@ -80,6 +80,8 @@ const DocumentTable = () => {
     </TableContainer>
   );
 };
+
+export default DocumentTableCompleted;
 
 const TableContainer = styled.div`
   width: 100%;
@@ -133,4 +135,13 @@ const ApprovalButton = styled.button`
   font-weight: bold;
 `;
 
-export default DocumentTable;
+const RefusalButton = styled.button`
+  background-color: #263a73;
+  color: #fff;
+  padding: 5px 10px;
+  border: 2px solid #263a73;
+  cursor: pointer;
+  border-radius: 7px;
+  width: 100px;
+  font-weight: bold;
+`;
