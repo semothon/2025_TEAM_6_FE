@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import LoginHeader from "../components/Header/LoginHeader";
 import UserHeader from "../components/Header/UserHeader";
 import ManagerHeader from "../components/Header/ManagerHeader";
 import backgroundImage from "../assets/images/loginBackground.png";

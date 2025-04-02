@@ -7,6 +7,7 @@ import classroom220 from "../assets/images/classroom_220.png";
 import classroom226 from "../assets/images/classroom_226.png";
 import classroom445 from "../assets/images/classroom_445.png";
 import classroom539 from "../assets/images/classroom_539.png";
+import pleImage from "../assets/images/maxple.png";
 
 const colleges = [
   { id: 1, name: "공과대학관" },
@@ -74,9 +75,14 @@ const CollegeList = () => {
               {classrooms[selectedCollege].map((room) => (
                 <ClassroomCard
                   key={room.id}
-                  onClick={() =>
-                    navigate(`/home/${selectedCollege}-${room.id}`)
-                  }
+                  onClick={() => {
+                    navigate(`/home/${selectedCollege}/${room.id}`, {
+                      state: {
+                        college: colleges[selectedCollege - 1],
+                        classroom: room,
+                      },
+                    });
+                  }}
                 >
                   <img
                     src={room.image}
@@ -91,7 +97,18 @@ const CollegeList = () => {
                     {room.id}호 |{" "}
                     {selectedCollegeObj ? selectedCollegeObj.name : ""}{" "}
                   </p>
-                  <p style={{ fontSize: "13px" }}>최대 {room.seats}명</p>
+                  <div style={{ display: "flex", alignItems: "baseline" }}>
+                    <img
+                      src={pleImage}
+                      alt="인원"
+                      style={{
+                        width: "13px",
+                        height: "13px",
+                        marginRight: "5px",
+                      }}
+                    />
+                    <p style={{ fontSize: "13px" }}>최대 {room.seats}명</p>
+                  </div>
                 </ClassroomCard>
               ))}
             </ClassroomGrid>
