@@ -24,7 +24,7 @@ const Modal = ({ title, message, onClose }) => {
   );
 };
 
-export default Popup;
+export default Modal;
 
 const PopupOverlay = styled.div`
   position: fixed;
