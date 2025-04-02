@@ -3,6 +3,7 @@ import styled from "styled-components";
 import UserHeader from "../components/Header/UserHeader";
 import { useRef, useState } from "react";
 import { VscClose } from "react-icons/vsc";
+import Modal from "../components/Modal";
 
 const Reservation = () => {
   const location = useLocation();
@@ -13,6 +14,8 @@ const Reservation = () => {
   const [selectedOne, setSelectedOne] = useState([]);
   // 서버에 보내지는 파일
   const [selectedFiles, setSelectedFiles] = useState(null);
+  // 신청하면 뜨는 모달달
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const onSelectFile = (e) => {
     e.preventDefault();
@@ -111,7 +114,17 @@ const Reservation = () => {
               </InfoContainer>
               <ButtonContainer>
                 <Button>목록</Button>
-                <Button primary>신청</Button>
+                <Button primary onClick={() => setIsModalOpen(true)}>
+                  신청
+                </Button>
+
+                {isModalOpen && (
+                  <Modal
+                    title="신청 완료"
+                    message="신청이 성공적으로 완료되었습니다."
+                    onClose={() => setIsModalOpen(false)}
+                  />
+                )}
               </ButtonContainer>
             </div>
           ) : (
