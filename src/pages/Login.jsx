@@ -1,5 +1,8 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import dummyData from "../assets/dummy/login.json";
 import UserHeader from "../components/Header/UserHeader";
 import ManagerHeader from "../components/Header/ManagerHeader";
 import backgroundImage from "../assets/images/loginBackground.png";
@@ -12,7 +15,19 @@ import loginImage from "../assets/images/loginPle.png";
 // info21 통합 ID 로그인 가능?
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [userId, setUserId] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  const [error, setError] = useState("");
   const [activeButton, setActiveButton] = useState("user");
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get(dummyData)
+      .then((response) => setData(response.data))
+      .catch((error) => console.error("Error loading JSON:", error));
+  }, []);
 
   return (
     <>
@@ -49,8 +64,20 @@ const Login = () => {
           </ButtonGroup>
           <LoginForm>
             <InputGroup>
-              <Input type="text" placeholder="아이디를 입력하세요" />
-              <Input type="password" placeholder="비밀번호를 입력하세요" />
+              <Input
+                type="text"
+                placeholder="아이디를 입력하세요"
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
+                required
+              />
+              <Input
+                type="password"
+                placeholder="비밀번호를 입력하세요"
+                value={userPassword}
+                onChange={(e) => setUserPassword(e.target.value)}
+                required
+              />
             </InputGroup>
             <LoginButton>로그인</LoginButton>
           </LoginForm>
@@ -66,6 +93,8 @@ const Login = () => {
           </Options>
 
           <Notice>
+            {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+
             <strong>📢 로그인 안내</strong>
             <ul>
               <li>통합정보시스템 학번/직번 로그인</li>

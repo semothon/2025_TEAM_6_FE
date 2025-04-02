@@ -36,8 +36,18 @@ const classrooms = {
 
 const CollegeList = () => {
   // @단과대 목록으로 할건지 대학관 목록으로 할건지 결정해야 함
-  const [selectedCollege, setSelectedCollege] = useState(null);
   const navigate = useNavigate();
+  const [selectedCollege, setSelectedCollege] = useState(null);
+  const [date, setDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
+  const [filteredRooms, setFilteredRooms] = useState(classrooms);
+
+  const handleSearch = () => {
+    // 여기서 특정 시간에 대한 필터링 로직을 추가할 수 있음
+    console.log(`검색 날짜: ${date}, 시작: ${startTime}, 종료: ${endTime}`);
+    setFilteredRooms(classrooms); // 현재는 전체 리스트 그대로 반환
+  };
 
   /* id기반으로 된 단과대 이름을 표시하기 위함함 */
   const selectedCollegeObj = colleges.find(
@@ -69,6 +79,30 @@ const CollegeList = () => {
 
       {/* Content */}
       <Content>
+        <FilterContainer>
+          <Input
+            type="date"
+            value={date}
+            placeholder={!date ? "날짜" : ""}
+            onChange={(e) => setDate(e.target.value)}
+          />
+          <Input
+            type="time"
+            value={startTime}
+            min="18:00"
+            max="22:00"
+            step="1800"
+            placeholder="시작 시간"
+            onChange={(e) => setStartTime(e.target.value)}
+          />
+          <Input
+            type="time"
+            value={endTime}
+            placeholder="종료 시간"
+            onChange={(e) => setEndTime(e.target.value)}
+          />
+          <SearchButton onClick={handleSearch}>검색하기</SearchButton>
+        </FilterContainer>
         {selectedCollege && classrooms[selectedCollege] ? (
           <>
             <ClassroomGrid>
@@ -88,7 +122,8 @@ const CollegeList = () => {
                     src={room.image}
                     alt={`${room.id}호`}
                     style={{
-                      width: "250px",
+                      width: "360px",
+                      height: "180px",
                       objectFit: "cover",
                       borderRadius: "8px",
                     }}
@@ -127,8 +162,8 @@ const Sidebar = styled.div`
   width: 250px;
   background: #fff;
   padding: 16px;
+  height: 102vh;
   overflow-y: auto;
-  height: 100vh;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
 `;
 
@@ -149,6 +184,39 @@ const CollegeButton = styled.button`
   }
 `;
 
+const FilterContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 20px;
+  background-color: #f0f0f0;
+  padding: 5px;
+  border: 1px solid #a0a0a0;
+  border-radius: 5px;
+  width: 1170px;
+`;
+
+const Input = styled.input`
+  padding: 8px;
+  border: none;
+  border-radius: 5px;
+  width: 28%;
+`;
+
+const SearchButton = styled.button`
+  padding: 8px 15px;
+  border: none;
+  background-color: #4f4f4f;
+  color: white;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 5px;
+  &:hover {
+    background-color: rgb(98, 98, 98);
+  }
+`;
+
 const Content = styled.div`
   flex: 1;
   padding: 24px;
@@ -166,6 +234,13 @@ const ClassroomCard = styled.div`
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
+  width: 350px;
+  height: 280px;
+
+  &:hover {
+    color: #263a73;
+    transition: 0.2s;
+  }
 `;
 
 const SelectedClassroom = styled.div`

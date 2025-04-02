@@ -1,0 +1,12 @@
+{
+    "result": "ERROR",
+    "data": {
+      "userId": "hong",
+      "userName": "홍길동",
+      "userRole": "USER"
+    },
+    "error": {
+      "code": "string",
+      "message": "string"
+    }
+  }
