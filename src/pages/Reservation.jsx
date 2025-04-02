@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import UserHeader from "../components/Header/UserHeader";
 import { useRef, useState } from "react";
@@ -7,6 +7,7 @@ import Modal from "../components/Modal";
 
 const Reservation = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const fileInputRef = useRef(null);
   const { date, startTime, endTime } = location.state || {};
 
@@ -113,7 +114,7 @@ const Reservation = () => {
                 </InfoRow>
               </InfoContainer>
               <ButtonContainer>
-                <Button>목록</Button>
+                <Button onClick={() => navigate("/home")}>목록</Button>
                 <Button primary onClick={() => setIsModalOpen(true)}>
                   신청
                 </Button>

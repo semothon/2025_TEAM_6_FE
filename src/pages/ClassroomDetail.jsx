@@ -89,7 +89,7 @@ const ClassroomDetail = () => {
             setSelectedTimeRange={setSelectedTimeRange}
           />{" "}
           <Buttons>
-            <ListButton>목록</ListButton>
+            <ListButton onClick={() => navigate("/home")}>목록</ListButton>
             <ApplyButton onClick={handleReservation}>대여 신청</ApplyButton>
           </Buttons>
         </Rightside>
