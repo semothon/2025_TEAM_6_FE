@@ -4,6 +4,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Document from "./pages/Document";
 import ClassroomDetail from "./pages/ClassroomDetail";
+import Reservation from "./pages/Reservation";
 
 const App = () => {
   return (
@@ -16,6 +17,7 @@ const App = () => {
           element={<ClassroomDetail />}
         ></Route>
         <Route path="/document" element={<Document />}></Route>
+        <Route path="/reservation" element={<Reservation />}></Route>
       </Routes>
     </BrowserRouter>
   );
