@@ -1,16 +1,22 @@
 import UserHeader from "../components/Header/UserHeader";
 import styled from "styled-components";
+import DocumentTable from "../components/DocumentTable";
 
 const Document = () => {
   return (
     <>
       <UserHeader />
       <PageWrapper>
-        <Center>
-          <h2>신청 내역 문서보관함</h2>
-          <h3>진행중인 신청내역</h3>
-          <h3>완료된 신청 내역</h3>
-        </Center>
+        <div style={{ marginTop: "200px" }}>
+          <Center>
+            <h2>신청 내역 문서보관함</h2>
+            <h3>진행중인 신청내역</h3>
+            <DocumentTable />
+            <br></br>
+            <h3>완료된 신청 내역</h3>
+            <DocumentTable />
+          </Center>
+        </div>
       </PageWrapper>
     </>
   );

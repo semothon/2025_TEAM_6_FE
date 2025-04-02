@@ -3,6 +3,7 @@ import styled from "styled-components";
 import UserHeader from "../components/Header/UserHeader";
 import ManagerHeader from "../components/Header/ManagerHeader";
 import backgroundImage from "../assets/images/loginBackground.png";
+import loginImage from "../assets/images/loginPle.png";
 
 // 로그인 페이지에서 로그인이 되어 있지 않은 상태에서
 // 다른 페이지들을 들어가면 어떻게 되나요 ex. 강의실 안내 외 alert?
@@ -18,11 +19,20 @@ const Login = () => {
       {activeButton === "user" ? <UserHeader /> : <ManagerHeader />}
       <PageWrapper>
         <Container>
-          <div style={{ fontSize: "13px", textAlign: "left" }}>
-            경희대학교 강의실 대여 서비스에 오신걸 환영합니다.
-            <br />
-            로그인을 하시면 더 많은 강의실 대여 서비스를 이용하실 수 있습니다.
+          <div style={{ display: "flex" }}>
+            <img
+              src={loginImage}
+              alt="로그인"
+              style={{ width: "40px", marginRight: "10px" }}
+            />
+            <div style={{ fontSize: "13px", textAlign: "left" }}>
+              경희대학교 강의실 대여 서비스에 오신걸 환영합니다.
+              <br />
+              로그인을 하시면 더 많은 강의실 대여 서비스를 이용하실 수 있습니다.
+            </div>
           </div>
+
+          <hr />
           <ButtonGroup>
             <StyledButton
               active={activeButton === "user"}

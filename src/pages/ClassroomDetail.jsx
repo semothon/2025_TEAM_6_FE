@@ -71,6 +71,7 @@ const Leftside = styled.div`
 const Buttons = styled.div`
   display: flex;
   justify-content: right;
+  margin-bottom: 10px;
 `;
 
 const ListButton = styled.button`
