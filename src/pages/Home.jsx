@@ -5,7 +5,6 @@ const Home = () => {
   return (
     <>
       <UserHeader />
-      <div>home~~</div>
       <CollegeList />
     </>
   );

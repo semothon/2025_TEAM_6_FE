@@ -1,6 +1,12 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import LoginHeader from "../components/Header/LoginHeader";
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import dummyData from "../assets/dummy/login.json";
+import UserHeader from "../components/Header/UserHeader";
+import ManagerHeader from "../components/Header/ManagerHeader";
+import backgroundImage from "../assets/images/loginBackground.png";
+import loginImage from "../assets/images/loginPle.png";
 
 // 로그인 페이지에서 로그인이 되어 있지 않은 상태에서
 // 다른 페이지들을 들어가면 어떻게 되나요 ex. 강의실 안내 외 alert?
@@ -9,18 +15,39 @@ import LoginHeader from "../components/Header/LoginHeader";
 // info21 통합 ID 로그인 가능?
 
 const Login = () => {
+  const navigate = useNavigate();
+  const [userId, setUserId] = useState("");
+  const [userPassword, setUserPassword] = useState("");
+  const [error, setError] = useState("");
   const [activeButton, setActiveButton] = useState("user");
+  const [data, setData] = useState(null);
+
+  useEffect(() => {
+    axios
+      .get(dummyData)
+      .then((response) => setData(response.data))
+      .catch((error) => console.error("Error loading JSON:", error));
+  }, []);
 
   return (
     <>
-      <LoginHeader />
+      {activeButton === "user" ? <UserHeader /> : <ManagerHeader />}
       <PageWrapper>
         <Container>
-          <div style={{ fontSize: "13px", textAlign: "left" }}>
-            경희대학교 강의실 대여 서비스에 오신걸 환영합니다.
-            <br />
-            로그인을 하시면 더 많은 강의실 대여 서비스를 이용하실 수 있습니다.
+          <div style={{ display: "flex" }}>
+            <img
+              src={loginImage}
+              alt="로그인"
+              style={{ width: "40px", marginRight: "10px" }}
+            />
+            <div style={{ fontSize: "13px", textAlign: "left" }}>
+              경희대학교 강의실 대여 서비스에 오신걸 환영합니다.
+              <br />
+              로그인을 하시면 더 많은 강의실 대여 서비스를 이용하실 수 있습니다.
+            </div>
           </div>
+
+          <hr />
           <ButtonGroup>
             <StyledButton
               active={activeButton === "user"}
@@ -37,8 +64,20 @@ const Login = () => {
           </ButtonGroup>
           <LoginForm>
             <InputGroup>
-              <Input type="text" placeholder="아이디를 입력하세요" />
-              <Input type="password" placeholder="비밀번호를 입력하세요" />
+              <Input
+                type="text"
+                placeholder="아이디를 입력하세요"
+                value={userId}
+                onChange={(e) => setUserId(e.target.value)}
+                required
+              />
+              <Input
+                type="password"
+                placeholder="비밀번호를 입력하세요"
+                value={userPassword}
+                onChange={(e) => setUserPassword(e.target.value)}
+                required
+              />
             </InputGroup>
             <LoginButton>로그인</LoginButton>
           </LoginForm>
@@ -54,6 +93,8 @@ const Login = () => {
           </Options>
 
           <Notice>
+            {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
+
             <strong>📢 로그인 안내</strong>
             <ul>
               <li>통합정보시스템 학번/직번 로그인</li>
@@ -76,6 +117,8 @@ const PageWrapper = styled.div`
   align-items: center;
   height: 100vh; /* 뷰포트 전체 높이를 차지 */
   width: 100vw; /* 뷰포트 전체 너비를 차지 */
+  background-image: url(${backgroundImage});
+  background-size: cover;
 `;
 
 const Container = styled.div`
@@ -85,6 +128,7 @@ const Container = styled.div`
   max-width: 1000px;
   margin: 20px auto;
   text-align: center;
+  background-color: #fff;
 `;
 
 const StyledButton = styled.button`

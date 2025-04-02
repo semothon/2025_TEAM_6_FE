@@ -1,16 +1,30 @@
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import khu from "../../assets/images/KHU.png";
 
 // 모든 페이지에 있을 헤더
 const UserHeader = () => {
   // 반응형으로 변경해야함
+
+  const navigate = useNavigate();
+
   return (
     <>
       <MainFrame>
-        <div style={{ marginLeft: "20px" }}>경희대학교 강의실 대여</div>
+        <div style={{ display: "flex", alignItems: "center" }}>
+          <img
+            src={khu}
+            alt="경희대학교"
+            style={{ width: "70px", marginLeft: "20px", marginRight: "10px" }}
+          />
+          <p>경희대학교 강의실 대여</p>
+        </div>
         <div style={{ display: "flex" }}>
-          <Milestone>강의실 안내</Milestone>
+          <Milestone onClick={() => navigate("/home")}>강의실 안내</Milestone>
           <Milestone>결과보고서 작성</Milestone>
-          <Milestone>문서보관함</Milestone>
+          <Milestone onClick={() => navigate("/document")}>
+            문서보관함
+          </Milestone>
           <Milestone>OOO님</Milestone>
           <Logout>로그아웃</Logout>
         </div>
@@ -32,8 +46,7 @@ const MainFrame = styled.header`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  z-index: 1000;
-  /* 헤더가 다른 요소들 보다 가장 위에 표시하기 위함 */
+  z-index: 1000; /* 헤더가 다른 요소들 보다 가장 위에 표시하기 위함 */
 `;
 
 const Milestone = styled.div`
