@@ -1,13 +1,16 @@
-import React from 'react';
 import styled from 'styled-components';
 import checkIcon from '../assets/images/Check_circle.png';
 import closeIcon from '../assets/images/close_btn.png';
 import React, { useState } from 'react';
-
+const TextAreaWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+`;
 const TextArea = styled.textarea`
   width: 100%;
   height: 120px;
-  margin-top: 1.5rem;
+  margin-top: 0rem;
   padding: 1rem;
   border-radius: 8px;
   border: 1px solid #ddd;
@@ -166,12 +169,18 @@ const Popup_reject = ({ title = '반려 사유', onClose }) => {
         </CloseButton>
         <TopSpace />
         <TopLine />
+        <TopSpace />
+        <TopSpace />
+
         <Title>{title}</Title>
-        <TextArea
-          value={reason}
-          onChange={(e) => setReason(e.target.value)}
-          placeholder="반려 사유를 작성해주세요."
-        />
+        <TextAreaWrapper>
+          <TextArea
+            value={reason}
+            onChange={(e) => setReason(e.target.value)}
+            placeholder="반려 사유를 작성해주세요."
+          />
+        </TextAreaWrapper>
+
         <ConfirmButton onClick={handleConfirm}>확인</ConfirmButton>
       </PopupBox>
     </PopupOverlay>
