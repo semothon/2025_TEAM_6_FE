@@ -73,82 +73,83 @@ const CollegeList = () => {
           </CollegeButton>
         ))}
       </Sidebar>
-
-      {/* Content */}
-      <Content>
-        <FilterContainer>
-          <Input
-            type="date"
-            value={date}
-            placeholder={!date ? "날짜" : ""}
-            onChange={(e) => setDate(e.target.value)}
-          />
-          <Input
-            type="time"
-            value={startTime}
-            min="18:00"
-            max="22:00"
-            step="1800"
-            placeholder="시작 시간"
-            onChange={(e) => setStartTime(e.target.value)}
-          />
-          <Input
-            type="time"
-            value={endTime}
-            placeholder="종료 시간"
-            onChange={(e) => setEndTime(e.target.value)}
-          />
-          <SearchButton onClick={handleSearch}>검색하기</SearchButton>
-        </FilterContainer>
-        {selectedCollege && classrooms[selectedCollege] ? (
-          <>
-            <ClassroomGrid>
-              {classrooms[selectedCollege].map((room) => (
-                <ClassroomCard
-                  key={room.id}
-                  onClick={() => {
-                    navigate(`/home/${selectedCollege}/${room.id}`, {
-                      state: {
-                        college: colleges[selectedCollege - 1],
-                        classroom: room,
-                      },
-                    });
-                  }}
-                >
-                  <img
-                    src={room.image}
-                    alt={`${room.id}호`}
-                    style={{
-                      width: "360px",
-                      height: "180px",
-                      objectFit: "cover",
-                      borderRadius: "8px",
+      <Wrapper>
+        {/* Content */}
+        <Content>
+          <FilterContainer>
+            <Input
+              type="date"
+              value={date}
+              placeholder={!date ? "날짜" : ""}
+              onChange={(e) => setDate(e.target.value)}
+            />
+            <Input
+              type="time"
+              value={startTime}
+              min="18:00"
+              max="22:00"
+              step="1800"
+              placeholder="시작 시간"
+              onChange={(e) => setStartTime(e.target.value)}
+            />
+            <Input
+              type="time"
+              value={endTime}
+              placeholder="종료 시간"
+              onChange={(e) => setEndTime(e.target.value)}
+            />
+            <SearchButton onClick={handleSearch}>검색하기</SearchButton>
+          </FilterContainer>
+          {selectedCollege && classrooms[selectedCollege] ? (
+            <>
+              <ClassroomGrid>
+                {classrooms[selectedCollege].map((room) => (
+                  <ClassroomCard
+                    key={room.id}
+                    onClick={() => {
+                      navigate(`/home/${selectedCollege}/${room.id}`, {
+                        state: {
+                          college: colleges[selectedCollege - 1],
+                          classroom: room,
+                        },
+                      });
                     }}
-                  />
-                  <p style={{ fontSize: "16px", fontWeight: "bold" }}>
-                    {room.id}호 |{" "}
-                    {selectedCollegeObj ? selectedCollegeObj.name : ""}{" "}
-                  </p>
-                  <div style={{ display: "flex", alignItems: "baseline" }}>
+                  >
                     <img
-                      src={pleImage}
-                      alt="인원"
+                      src={room.image}
+                      alt={`${room.id}호`}
                       style={{
-                        width: "13px",
-                        height: "13px",
-                        marginRight: "5px",
+                        width: "375px",
+                        height: "180px",
+                        objectFit: "cover",
+                        borderRadius: "8px",
                       }}
                     />
-                    <p style={{ fontSize: "13px" }}>최대 {room.seats}명</p>
-                  </div>
-                </ClassroomCard>
-              ))}
-            </ClassroomGrid>
-          </>
-        ) : (
-          <p style={{ color: "#6b7280" }}> 단과대를 선택해주세요 </p>
-        )}
-      </Content>
+                    <p style={{ fontSize: "16px", fontWeight: "bold" }}>
+                      {room.id}호 |{" "}
+                      {selectedCollegeObj ? selectedCollegeObj.name : ""}{" "}
+                    </p>
+                    <div style={{ display: "flex", alignItems: "baseline" }}>
+                      <img
+                        src={pleImage}
+                        alt="인원"
+                        style={{
+                          width: "13px",
+                          height: "13px",
+                          marginRight: "5px",
+                        }}
+                      />
+                      <p style={{ fontSize: "13px" }}>최대 {room.seats}명</p>
+                    </div>
+                  </ClassroomCard>
+                ))}
+              </ClassroomGrid>
+            </>
+          ) : (
+            <p style={{ color: "#6b7280" }}> 단과대를 선택해주세요 </p>
+          )}
+        </Content>
+      </Wrapper>
     </div>
   );
 };
@@ -245,7 +246,6 @@ const ClassroomCard = styled.div`
   cursor: pointer;
   display: flex;
   flex-direction: column;
-  align-items: center; // 내부 콘텐츠(이미지) 가운데 정렬
   width: 90%;
 
   &:hover {
@@ -254,9 +254,7 @@ const ClassroomCard = styled.div`
   }
 `;
 
-const SelectedClassroom = styled.div`
-  margin-top: 24px;
-  padding: 16px;
-  background: #e5e7eb;
-  border-radius: 8px;
+const Wrapper = styled.div`
+  margin-left: 50px;
+  margin-top: 10px;
 `;
