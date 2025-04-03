@@ -1,11 +1,12 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Home from "./pages/Home";
-import Login from "./pages/Login";
-import Document from "./pages/Document";
-import ClassroomDetail from "./pages/ClassroomDetail";
-import Reservation from "./pages/Reservation";
-import Report from "./pages/Report";
+import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from './pages/Home';
+import Login from './pages/Login';
+import Document from './pages/Document';
+import ClassroomDetail from './pages/ClassroomDetail';
+import Reservation from './pages/Reservation';
+import Report from './pages/Report';
+import AppliedContent from './pages/AppliedContent';
 
 const App = () => {
   return (
@@ -20,6 +21,7 @@ const App = () => {
         <Route path="/document" element={<Document />}></Route>
         <Route path="/reservation" element={<Reservation />}></Route>
         <Route path="/report" element={<Report />}></Route>
+        <Route path="/applied-content" element={<AppliedContent />}></Route>
       </Routes>
     </BrowserRouter>
   );
