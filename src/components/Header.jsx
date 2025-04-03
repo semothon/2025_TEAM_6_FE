@@ -1,12 +1,10 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import khu from "../../assets/images/KHU.png";
-import kyunghee from "../../assets/images/KYUNGHEEUNIV.png";
+import khu from "../assets/images/KHU.png";
+import kyunghee from "../assets/images/KYUNGHEEUNIV.png";
 
 // 모든 페이지에 있을 헤더
-const UserHeader = () => {
-  // 반응형으로 변경해야함
-
+const Header = ({ role }) => {
   const navigate = useNavigate();
 
   return (
@@ -49,9 +47,13 @@ const UserHeader = () => {
         <div style={{ display: "flex", alignItems: "center" }}>
           <MilestoneContainer>
             <Milestone onClick={() => navigate("/home")}>강의실 안내</Milestone>
-            <Milestone onClick={() => navigate("/report")}>
-              결과보고서 작성
-            </Milestone>
+            {role === "USER" ? (
+              <Milestone onClick={() => navigate("/report")}>
+                결과보고서 작성
+              </Milestone>
+            ) : (
+              ""
+            )}
             <Milestone onClick={() => navigate("/document")}>
               문서보관함
             </Milestone>
@@ -66,7 +68,7 @@ const UserHeader = () => {
   );
 };
 
-export default UserHeader;
+export default Header;
 
 const MainFrame = styled.header`
   position: fixed;

@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import dummyData from "../assets/dummy/login.json";
-import UserHeader from "../components/Header/UserHeader";
+import Header from "../components/Header";
 import ManagerHeader from "../components/Header/ManagerHeader";
 import backgroundImage from "../assets/images/loginBackground.png";
 import loginImage from "../assets/images/loginPle.png";
@@ -18,8 +18,7 @@ const Login = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState("");
   const [userPassword, setUserPassword] = useState("");
-  const [error, setError] = useState("");
-  const [activeButton, setActiveButton] = useState("user");
+  const [activeButton, setActiveButton] = useState("USER");
   const [data, setData] = useState(null);
 
   useEffect(() => {
@@ -31,7 +30,11 @@ const Login = () => {
 
   return (
     <>
-      {activeButton === "user" ? <UserHeader /> : <ManagerHeader />}
+      {activeButton === "USER" ? (
+        <Header role="USER" />
+      ) : (
+        <Header role="ADMIN" />
+      )}
       <PageWrapper>
         <Container>
           <div style={{ display: "flex", marginBottom: "20px" }}>
@@ -50,14 +53,14 @@ const Login = () => {
           <hr />
           <ButtonGroup>
             <StyledButton
-              active={activeButton === "user"}
-              onClick={() => setActiveButton("user")}
+              active={activeButton === "USER"}
+              onClick={() => setActiveButton("USER")}
             >
               사용자 로그인
             </StyledButton>
             <StyledButton
-              active={activeButton === "admin"}
-              onClick={() => setActiveButton("admin")}
+              active={activeButton === "ADMIN"}
+              onClick={() => setActiveButton("ADMIN")}
             >
               관리자 로그인
             </StyledButton>
@@ -93,8 +96,6 @@ const Login = () => {
           </Options>
 
           <Notice>
-            {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
-
             <strong>📢 로그인 안내</strong>
             <ul>
               <li>통합정보시스템 학번/직번 로그인</li>
