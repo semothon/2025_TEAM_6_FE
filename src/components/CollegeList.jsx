@@ -55,15 +55,12 @@ const CollegeList = () => {
   );
 
   return (
-    <div style={{ display: "flex", height: "85vh" }}>
+    // 헤더 제외 높이를 최대 높이라 간주주
+    <div style={{ display: "flex", height: "calc(100vh - 200px)" }}>
       {/* Sidebar */}
       <Sidebar>
-        <h2
-          style={{ fontSize: "18px", fontWeight: "bold", marginBottom: "16px" }}
-        >
-          단과대 목록
-        </h2>
-        <hr style={{ color: "#868686" }}></hr>
+        <Title>단과대 목록</Title>
+        <hr style={{ color: "#868686", width: "90%" }}></hr>
         {colleges.map((college) => (
           <CollegeButton
             key={college.id}
@@ -161,22 +158,34 @@ export default CollegeList;
 const Sidebar = styled.div`
   width: 250px;
   background: #fff;
-  padding: 16px;
-  height: 102vh;
+  padding: 16px 0 16px 0; // 좌우 padding 제거
+  height: 100vh;
   overflow-y: auto;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
 `;
 
+const Title = styled.div`
+  font-size: 22px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  margin-left: 29px;
+  margin-top: 10px;
+`;
+
 const CollegeButton = styled.button`
   width: 100%;
-  padding: 10px;
+  text-align: left;
+  padding: 15px 16px 15px 30px; // 왼쪽 여백만 늘려서 텍스트 들여쓰기
   margin-bottom: 8px;
   border: none;
   background: ${(props) => (props.active ? "#EFF2F6" : "#fff")};
   color: ${(props) => (props.active ? "#263A73" : "#868686")};
+  font-size: 18px;
   font-weight: ${(props) => (props.active ? "bold" : "normal")};
   cursor: pointer;
-  border-radius: 4px;
+  border-right: ${(props) =>
+    props.active ? "4px solid #263A73" : "4px solid transparent"};
+  border-radius: 0;
   transition: 0.3s;
 
   &:hover {
@@ -190,10 +199,10 @@ const FilterContainer = styled.div`
   gap: 10px;
   margin-bottom: 20px;
   background-color: #f0f0f0;
-  padding: 5px;
+  padding: 7px 3px 7px;
   border: 1px solid #a0a0a0;
   border-radius: 5px;
-  width: 1170px;
+  width: 75vw;
 `;
 
 const Input = styled.input`
@@ -234,8 +243,10 @@ const ClassroomCard = styled.div`
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   cursor: pointer;
-  width: 350px;
-  height: 280px;
+  display: flex;
+  flex-direction: column;
+  align-items: center; // 내부 콘텐츠(이미지) 가운데 정렬
+  width: 90%;
 
   &:hover {
     color: #263a73;

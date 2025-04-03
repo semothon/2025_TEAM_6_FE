@@ -20,6 +20,7 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const [activeButton, setActiveButton] = useState("USER");
 
+  // Login.jsx:64 로그인 오류: AxiosError {message: 'Request failed with status code 500'}
   const handleLogin = async (e) => {
     e.preventDefault();
 
