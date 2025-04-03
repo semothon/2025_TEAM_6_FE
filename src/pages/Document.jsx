@@ -4,26 +4,33 @@ import DocumentTable from "../components/DocumentTable";
 import DocumentTableCompleted from "../components/DocumentTableCompleted";
 
 const Document = () => {
-  const requestData = [
+  const requestDataING = [
     { room: "539호", date: "2025.03.21", message: "승인 대기" },
     { room: "220호", date: "2025.03.26", message: "승인 대기" },
     { room: "226호", date: "2025.03.28", message: "승인 대기" },
     { room: "445호", date: "2025.04.02", message: "승인 대기" },
   ];
 
+  const requestDataED = [
+    { room: "539호", date: "2025.03.21", message: "승인" },
+    { room: "220호", date: "2025.03.26", message: "승인" },
+    { room: "226호", date: "2025.03.28", message: "반려" },
+    { room: "445호", date: "2025.04.02", message: "반려" },
+  ];
+
   return (
     <>
       <UserHeader />
       <PageWrapper>
-        <div style={{ marginTop: "200px" }}>
+        <div style={{ marginTop: "250px" }}>
           <h2 style={{ display: "flex", justifyContent: "center" }}>
             신청 내역 문서보관함
           </h2>
           <h3>진행중인 신청내역</h3>
-          <DocumentTable data={requestData} />
+          <DocumentTable data={requestDataING} />
           <br></br>
           <h3>완료된 신청 내역</h3>
-          <DocumentTableCompleted />
+          <DocumentTable data={requestDataED} />
           <br></br>
         </div>
       </PageWrapper>

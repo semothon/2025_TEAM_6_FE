@@ -4,9 +4,9 @@ import styled from "styled-components";
 
 const Report = () => {
   const requestData = [
-    { room: "220호", date: "2025.03.26", message: "승인 대기" },
-    { room: "226호", date: "2025.03.28", message: "승인 대기" },
-    { room: "445호", date: "2025.04.02", message: "승인 완료" },
+    { room: "220호", date: "2025.03.26", message: "선택" },
+    { room: "226호", date: "2025.03.28", message: "선택" },
+    { room: "445호", date: "2025.04.02", message: "선택" },
   ];
   return (
     <>

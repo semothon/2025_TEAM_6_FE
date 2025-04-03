@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import rightArrow from "../assets/images/rightArrow.png";
 
 const DocumentTable = ({ data }) => {
   return (
@@ -27,7 +26,21 @@ const DocumentTable = ({ data }) => {
               </Td>
               <Td>
                 <ButtonContainer>
-                  <ApprovalButton>{item.message}</ApprovalButton>
+                  {item.message === "승인" ||
+                  item.message === "승인 대기" ||
+                  item.message === "선택" ? (
+                    <ApprovalButton
+                      onClick={() =>
+                        item.message === "선택"
+                          ? setSelectedMessage(item)
+                          : null
+                      }
+                    >
+                      {item.message}
+                    </ApprovalButton>
+                  ) : (
+                    <RefusalButton>{item.message}</RefusalButton>
+                  )}
                 </ButtonContainer>
               </Td>
             </tr>
@@ -38,11 +51,10 @@ const DocumentTable = ({ data }) => {
   );
 };
 
+export default DocumentTable;
+
 const TableContainer = styled.div`
   width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
   overflow-x: auto;
 `;
 
@@ -57,12 +69,14 @@ const Th = styled.th`
   padding: 12px;
   border-bottom: 2px solid #ddd;
   text-align: center;
+  font-size: 14px;
 `;
 
 const Td = styled.td`
   padding: 12px;
   border-bottom: 1px solid #ddd;
   text-align: center;
+  font-size: 13px;
 `;
 
 const ButtonContainer = styled.div`
@@ -75,11 +89,12 @@ const Button = styled.button`
   background-color: #444;
   color: white;
   padding: 5px 10px;
-  border: 2px solid #444;
+  border: 2px sold #444;
   cursor: pointer;
   border-radius: 5px;
   display: flex;
   font-weight: bold;
+  font-size: 12px;
 `;
 
 const ApprovalButton = styled.button`
@@ -89,8 +104,19 @@ const ApprovalButton = styled.button`
   border: 2px solid #263a73;
   cursor: pointer;
   border-radius: 7px;
-  width: 100px;
+  width: 80px;
   font-weight: bold;
+  font-size: 12px;
 `;
 
-export default DocumentTable;
+const RefusalButton = styled.button`
+  background-color: #263a73;
+  color: #fff;
+  padding: 5px 10px;
+  border: 2px solid #263a73;
+  cursor: pointer;
+  border-radius: 7px;
+  width: 80px;
+  font-weight: bold;
+  font-size: 12px;
+`;
