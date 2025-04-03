@@ -88,7 +88,7 @@ const Login = () => {
             </label>
             <Links>
               <a href="#">아이디 찾기</a> | <a href="#">비밀번호 찾기</a> |{" "}
-              <a href="#">로그인 안내</a>
+              <a href="#">회원가입</a>
             </Links>
           </Options>
 

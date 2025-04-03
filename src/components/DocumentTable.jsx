@@ -1,53 +1,74 @@
 import styled from "styled-components";
+import { use, useState } from "react";
 
 const DocumentTable = ({ data }) => {
+  const [selectedItem, setSelectedItem] = useState(null);
+
+  const showInfo = (item) => {
+    if (selectedItem && selectedItem === item) {
+      setSelectedItem(null);
+    } else {
+      setSelectedItem(item);
+    }
+  };
+
   return (
-    <TableContainer>
-      <Table>
-        <thead>
-          <tr>
-            <Th>구분</Th>
-            <Th>신청 강의실</Th>
-            <Th>신청 날짜</Th>
-            <Th>신청 내용</Th>
-            <Th>상태</Th>
-          </tr>
-        </thead>
-        <tbody>
-          {data.map((item, index) => (
-            <tr key={index}>
-              <Td>대여</Td>
-              <Td>{item.room}</Td>
-              <Td>{item.date}</Td>
-              <Td>
-                <ButtonContainer>
-                  <Button>내용 보기</Button>
-                </ButtonContainer>
-              </Td>
-              <Td>
-                <ButtonContainer>
-                  {item.message === "승인" ||
-                  item.message === "승인 대기" ||
-                  item.message === "선택" ? (
-                    <ApprovalButton
-                      onClick={() =>
-                        item.message === "선택"
-                          ? setSelectedMessage(item)
-                          : null
-                      }
-                    >
-                      {item.message}
-                    </ApprovalButton>
-                  ) : (
-                    <RefusalButton>{item.message}</RefusalButton>
-                  )}
-                </ButtonContainer>
-              </Td>
+    <>
+      <TableContainer>
+        <Table>
+          <thead>
+            <tr>
+              <Th>구분</Th>
+              <Th>신청 강의실</Th>
+              <Th>신청 날짜</Th>
+              <Th>신청 내용</Th>
+              <Th>상태</Th>
             </tr>
-          ))}
-        </tbody>
-      </Table>
-    </TableContainer>
+          </thead>
+          <tbody>
+            {data.map((item, index) => (
+              <tr key={index}>
+                <Td>대여</Td>
+                <Td>{item.room}</Td>
+                <Td>{item.date}</Td>
+                <Td>
+                  <ButtonContainer>
+                    <Button>내용 보기</Button>
+                  </ButtonContainer>
+                </Td>
+                <Td>
+                  <ButtonContainer>
+                    {item.message === "승인" ||
+                    item.message === "승인 대기" ||
+                    item.message === "선택" ? (
+                      <ApprovalButton
+                        selected={selectedItem === item}
+                        onClick={() =>
+                          item.message === "선택" ? showInfo(item) : null
+                        }
+                      >
+                        {item.message}
+                      </ApprovalButton>
+                    ) : (
+                      <RefusalButton>{item.message}</RefusalButton>
+                    )}
+                  </ButtonContainer>
+                </Td>
+              </tr>
+            ))}
+          </tbody>
+        </Table>
+      </TableContainer>
+
+      {/* 선택된 항목 정보 출력 */}
+      {selectedItem && (
+        <InfoBox>
+          <p>신청 강의실: {selectedItem.room}</p>
+          <p>신청 날짜: {selectedItem.date}</p>
+          <p>신청 내용: {selectedItem.message}</p>
+        </InfoBox>
+      )}
+    </>
   );
 };
 
@@ -98,8 +119,8 @@ const Button = styled.button`
 `;
 
 const ApprovalButton = styled.button`
-  background-color: white;
-  color: #263a73;
+  background-color: ${({ selected }) => (selected ? "#263a73" : "white")};
+  color: ${({ selected }) => (selected ? "white" : "#263a73")};
   padding: 5px 10px;
   border: 2px solid #263a73;
   cursor: pointer;
@@ -119,4 +140,13 @@ const RefusalButton = styled.button`
   width: 80px;
   font-weight: bold;
   font-size: 12px;
+`;
+
+const InfoBox = styled.div`
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #f9f9f9;
+  font-size: 14px;
 `;

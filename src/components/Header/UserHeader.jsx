@@ -41,7 +41,7 @@ const MainFrame = styled.header`
   position: fixed;
   width: 100%;
   top: 0;
-  height: 60px;
+  height: 135px;
   background-color: #9d1c1f;
   color: #fff;
   border: none;

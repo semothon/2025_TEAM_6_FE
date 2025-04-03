@@ -41,5 +41,6 @@ const ContentWrapper = styled.div`
 `;
 
 const Title = styled.h3`
-  margin-bottom: 10px; /* 테이블과의 간격 조정 */
+  margin-bottom: 20px; /* 테이블과의 간격 조정 */
+  margin-top: 30px;
 `;

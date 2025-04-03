@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import UserHeader from "../components/Header/UserHeader";
 import pleImage from "../assets/images/maxple.png";
 import styled from "styled-components";
-import Calendar from "../components/Calender";
+import Calendar from "../components/Calendar";
 
 const ClassroomDetail = () => {
   const location = useLocation();
@@ -111,29 +111,34 @@ const Leftside = styled.div`
 
 const Rightside = styled.div`
   margin-top: 70px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  height: 100%;
 `;
 
 const Buttons = styled.div`
   display: flex;
-  justify-content: right;
-  margin-bottom: 10px;
+  margin-top: 200px;
+  margin-left: 340px;
 `;
 
 const ListButton = styled.button`
   color: #fff;
   background-color: #4f4f4f;
   border-radius: 5px;
-  font-size: 12px;
-  width: 110px;
-  height: 35px;
+  font-size: 13px;
+  width: 120px;
+  height: 40px;
 `;
 
 const ApplyButton = styled.button`
   color: #fff;
   background-color: #263a73;
   border-radius: 5px;
-  font-size: 12px;
-  width: 110px;
-  height: 35px;
+  font-size: 13px;
+  width: 120px;
+  height: 40px;
   margin-left: 10px;
 `;
