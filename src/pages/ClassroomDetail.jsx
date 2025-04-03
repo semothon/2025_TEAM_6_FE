@@ -3,7 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import UserHeader from "../components/Header/UserHeader";
 import pleImage from "../assets/images/maxple.png";
 import styled from "styled-components";
-import Calendar from "../components/Calender";
+import Calendar from "../components/Calendar";
 
 const ClassroomDetail = () => {
   const location = useLocation();
