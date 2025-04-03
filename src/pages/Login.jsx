@@ -34,13 +34,13 @@ const Login = () => {
       {activeButton === "user" ? <UserHeader /> : <ManagerHeader />}
       <PageWrapper>
         <Container>
-          <div style={{ display: "flex" }}>
+          <div style={{ display: "flex", marginBottom: "20px" }}>
             <img
               src={loginImage}
               alt="로그인"
-              style={{ width: "40px", marginRight: "10px" }}
+              style={{ width: "50px", marginRight: "10px" }}
             />
-            <div style={{ fontSize: "13px", textAlign: "left" }}>
+            <div style={{ fontSize: "16px", textAlign: "left" }}>
               경희대학교 강의실 대여 서비스에 오신걸 환영합니다.
               <br />
               로그인을 하시면 더 많은 강의실 대여 서비스를 이용하실 수 있습니다.
@@ -84,7 +84,7 @@ const Login = () => {
 
           <Options>
             <label>
-              <input type="checkbox" /> 아이디 저장
+              <input type="checkbox" /> 로그인 유지
             </label>
             <Links>
               <a href="#">아이디 찾기</a> | <a href="#">비밀번호 찾기</a> |{" "}
@@ -111,11 +111,12 @@ const Login = () => {
 
 export default Login;
 
+// 이미지는 헤더 높이를 포함해서 가운데 배치해야함
 const PageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* 뷰포트 전체 높이를 차지 */
+  height: 100vh; /* 뷰포트 전체 높이를 차지지 */
   width: 100vw; /* 뷰포트 전체 너비를 차지 */
   background-image: url(${backgroundImage});
   background-size: cover;
@@ -123,10 +124,10 @@ const PageWrapper = styled.div`
 
 const Container = styled.div`
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  border-radius: 8px;
+  padding: 50px;
+  border-radius: 15px;
   max-width: 1000px;
-  margin: 20px auto;
+  margin-top: 80px; /* Container는 헤더 제외 높이에서 가운데 위치치 */
   text-align: center;
   background-color: #fff;
 `;
@@ -134,8 +135,8 @@ const Container = styled.div`
 const StyledButton = styled.button`
   flex: 1;
   padding: 10px;
-  font-size: 14px;
-  font-weight: bold;
+  font-size: 18px;
+  font-weight: ${(props) => (props.active ? "bold" : "normal")}
   cursor: pointer;
   border-radius: 5px;
   border: 2px solid #263a73;
@@ -169,20 +170,21 @@ const InputGroup = styled.div`
 `;
 
 const Input = styled.input`
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
+  padding: 12px;
+  font-size: 12px;
+  border: 1px solid rgb(216, 216, 216);
   border-radius: 5px;
   width: 400px;
 
   &::placeholder {
     font-size: 13px;
+    color: #bababa;
   }
 `;
 
 const LoginButton = styled.button`
-  padding: 32px 20px;
-  font-size: 14px;
+  padding: 32px 40px;
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
   border-radius: 5px;
