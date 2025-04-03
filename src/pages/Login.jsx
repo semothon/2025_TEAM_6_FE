@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import dummyData from "../assets/dummy/login.json";
 import Header from "../components/Header";
-import ManagerHeader from "../components/Header/ManagerHeader";
 import backgroundImage from "../assets/images/loginBackground.png";
 import loginImage from "../assets/images/loginPle.png";
 
@@ -18,15 +16,54 @@ const Login = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState("");
   const [userPassword, setUserPassword] = useState("");
+  const [userRole, setUserRole] = useState("");
+  const [message, setMessage] = useState("");
   const [activeButton, setActiveButton] = useState("USER");
-  const [data, setData] = useState(null);
 
-  useEffect(() => {
-    axios
-      .get(dummyData)
-      .then((response) => setData(response.data))
-      .catch((error) => console.error("Error loading JSON:", error));
-  }, []);
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "https://itsmeweb.store/api/login",
+        {
+          userId,
+          userPassword,
+          userRole: activeButton,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const result = response.data;
+
+      if (result.result === "SUCCESS") {
+        // const { token, user } = result.data;
+
+        // // 로그인 정보 저장
+        // localStorage.setItem("accessToken", token);
+        // localStorage.setItem("user", JSON.stringify(user));
+        // localStorage.setItem("role", userRole);
+
+        setMessage(`${user.userName}님 환영합니다!`);
+        navigate("/home");
+      } else {
+        setMessage("로그인에 실패했습니다. 다시 확인해주세요.");
+      }
+    } catch (error) {
+      // 서버에서 에러 구조화해서 보내줌
+      if (error.response?.data?.error) {
+        setMessage(error.response.data.error.message); // 예: "존재하지 않는 아이디입니다."
+      } else {
+        setMessage("로그인 요청 중 오류가 발생했습니다.");
+      }
+
+      console.error("로그인 오류:", error);
+    }
+  };
 
   return (
     <>
@@ -65,7 +102,7 @@ const Login = () => {
               관리자 로그인
             </StyledButton>
           </ButtonGroup>
-          <LoginForm>
+          <LoginForm onSubmit={handleLogin}>
             <InputGroup>
               <Input
                 type="text"
@@ -82,7 +119,7 @@ const Login = () => {
                 required
               />
             </InputGroup>
-            <LoginButton>로그인</LoginButton>
+            <LoginButton type="submit">로그인</LoginButton>
           </LoginForm>
 
           <Options>
@@ -156,7 +193,7 @@ const ButtonGroup = styled.div`
   margin-top: 15px;
 `;
 
-const LoginForm = styled.div`
+const LoginForm = styled.form`
   display: flex;
   align-items: center; /* 입력 필드와 로그인 버튼을 수직 정렬 */
   gap: 10px; /* 입력 필드와 버튼 사이 간격 */
