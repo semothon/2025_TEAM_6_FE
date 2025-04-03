@@ -88,11 +88,11 @@ const ClassroomDetail = () => {
             selectedTimeRange={selectedTimeRange}
             setSelectedTimeRange={setSelectedTimeRange}
           />{" "}
+          <Buttons>
+            <ListButton onClick={() => navigate("/home")}>목록</ListButton>
+            <ApplyButton onClick={handleReservation}>대여 신청</ApplyButton>
+          </Buttons>
         </Rightside>
-        <Buttons>
-          <ListButton onClick={() => navigate("/home")}>목록</ListButton>
-          <ApplyButton onClick={handleReservation}>대여 신청</ApplyButton>
-        </Buttons>
       </EntireWrapper>
     </>
   );
@@ -111,33 +111,34 @@ const Leftside = styled.div`
 
 const Rightside = styled.div`
   margin-top: 70px;
-  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   width: 100%;
   height: 100%;
 `;
 
 const Buttons = styled.div`
-  position: absolute;
-  bottom: 10px;
-  right: 10px;
   display: flex;
+  margin-top: 200px;
+  margin-left: 340px;
 `;
 
 const ListButton = styled.button`
   color: #fff;
   background-color: #4f4f4f;
   border-radius: 5px;
-  font-size: 12px;
-  width: 110px;
-  height: 35px;
+  font-size: 13px;
+  width: 120px;
+  height: 40px;
 `;
 
 const ApplyButton = styled.button`
   color: #fff;
   background-color: #263a73;
   border-radius: 5px;
-  font-size: 12px;
-  width: 110px;
-  height: 35px;
+  font-size: 13px;
+  width: 120px;
+  height: 40px;
   margin-left: 10px;
 `;
