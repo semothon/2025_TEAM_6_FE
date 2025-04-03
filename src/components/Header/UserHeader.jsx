@@ -21,7 +21,9 @@ const UserHeader = () => {
         </div>
         <div style={{ display: "flex" }}>
           <Milestone onClick={() => navigate("/home")}>강의실 안내</Milestone>
-          <Milestone>결과보고서 작성</Milestone>
+          <Milestone onClick={() => navigate("/report")}>
+            결과보고서 작성
+          </Milestone>
           <Milestone onClick={() => navigate("/document")}>
             문서보관함
           </Milestone>

@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import rightArrow from "../assets/images/rightArrow.png";
 
-const DocumentTable = () => {
+const DocumentTable = ({ room, date, message }) => {
   return (
     <TableContainer>
       <Table>
@@ -17,8 +17,8 @@ const DocumentTable = () => {
         <tbody>
           <tr>
             <Td>대여</Td>
-            <Td>539호</Td>
-            <Td>2025.03.21</Td>
+            <Td>{room}</Td>
+            <Td>{date}</Td>
             <Td>
               <ButtonContainer>
                 <Button>내용 보기 </Button>
@@ -26,7 +26,7 @@ const DocumentTable = () => {
             </Td>
             <Td>
               <ButtonContainer>
-                <ApprovalButton>승인 대기</ApprovalButton>
+                <ApprovalButton>{message}</ApprovalButton>
               </ButtonContainer>
             </Td>
           </tr>
@@ -83,6 +83,9 @@ const DocumentTable = () => {
 
 const TableContainer = styled.div`
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   overflow-x: auto;
 `;
 

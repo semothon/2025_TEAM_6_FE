@@ -13,7 +13,7 @@ const Document = () => {
             신청 내역 문서보관함
           </h2>
           <h3>진행중인 신청내역</h3>
-          <DocumentTable />
+          <DocumentTable room="130호" date="2025.03.25" message="승인 대기" />
           <br></br>
           <h3>완료된 신청 내역</h3>
           <DocumentTableCompleted />
