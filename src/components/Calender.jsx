@@ -114,21 +114,21 @@ const Calendar = ({
       </Grid>
       {selectedDate && (
         <TimeSelection>
-          <h4>{selectedDate.toDateString()} 시간 선택</h4>
           <TimeRow>
             {timeSlots.map((time, index) => (
-              <TimeSlot
-                key={index}
-                onClick={() => handleTimeSelect(time)}
-                selected={
-                  selectedTimeRange.start !== null &&
-                  time >= selectedTimeRange.start &&
-                  time <= selectedTimeRange.end
-                }
-              >
-                {Math.floor(time)}:{time % 1 === 0.5 ? "30" : "00"}{" "}
-                {time < 12 ? "AM" : "PM"}
-              </TimeSlot>
+              <TimeSlotContainer key={index}>
+                <TimeSlot
+                  onClick={() => handleTimeSelect(time)}
+                  selected={
+                    selectedTimeRange.start !== null &&
+                    time >= selectedTimeRange.start &&
+                    time <= selectedTimeRange.end
+                  }
+                />
+                <TimeLabel>{`${Math.floor(time)}:${
+                  time % 1 === 0.5 ? "30" : "00"
+                }`}</TimeLabel>
+              </TimeSlotContainer>
             ))}
           </TimeRow>
         </TimeSelection>
@@ -141,6 +141,7 @@ export default Calendar;
 
 const CalendarContainer = styled.div`
   width: 650px;
+  height: 450px;
   text-align: center;
 `;
 
@@ -176,23 +177,33 @@ const Day = styled.div`
 `;
 
 const TimeSelection = styled.div`
-  margin-top: 10px;
+  margin-top: 65px;
   text-align: center;
 `;
 
 const TimeRow = styled.div`
   display: flex;
-  overflow-x: auto;
-  white-space: nowrap;
+  justify-content: center;
+  flex-wrap: wrap;
+`;
+
+const TimeSlotContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 10%;
+`;
+
+const TimeLabel = styled.div`
+  font-size: 12px;
+  margin-bottom: 5px;
 `;
 
 const TimeSlot = styled.div`
-  margin: 2px;
+  width: 100%;
+  height: 40px;
   cursor: pointer;
-  background-color: ${(props) => (props.selected ? "#4F4F4F" : "#ccc")};
-  color: ${(props) => (props.selected ? "#fff" : "black")};
-  transition: background-color 0.3s, color 0.3s;
-  display: inline-block;
-  min-width: 50px;
-  text-align: center;
+  background-color: ${(props) => (props.selected ? "#263A73" : "#F6F7F8")};
+  border-radius: 5px;
+  transition: background-color 0.3s;
 `;

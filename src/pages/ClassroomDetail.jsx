@@ -88,11 +88,11 @@ const ClassroomDetail = () => {
             selectedTimeRange={selectedTimeRange}
             setSelectedTimeRange={setSelectedTimeRange}
           />{" "}
-          <Buttons>
-            <ListButton onClick={() => navigate("/home")}>목록</ListButton>
-            <ApplyButton onClick={handleReservation}>대여 신청</ApplyButton>
-          </Buttons>
         </Rightside>
+        <Buttons>
+          <ListButton onClick={() => navigate("/home")}>목록</ListButton>
+          <ApplyButton onClick={handleReservation}>대여 신청</ApplyButton>
+        </Buttons>
       </EntireWrapper>
     </>
   );
@@ -111,12 +111,16 @@ const Leftside = styled.div`
 
 const Rightside = styled.div`
   margin-top: 70px;
+  position: relative;
+  width: 100%;
+  height: 100%;
 `;
 
 const Buttons = styled.div`
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
   display: flex;
-  justify-content: right;
-  margin-bottom: 10px;
 `;
 
 const ListButton = styled.button`

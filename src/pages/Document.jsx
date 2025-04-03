@@ -1,7 +1,6 @@
 import UserHeader from "../components/Header/UserHeader";
 import styled from "styled-components";
 import DocumentTable from "../components/DocumentTable";
-import DocumentTableCompleted from "../components/DocumentTableCompleted";
 
 const Document = () => {
   const requestDataING = [
@@ -22,7 +21,7 @@ const Document = () => {
     <>
       <UserHeader />
       <PageWrapper>
-        <div style={{ marginTop: "250px" }}>
+        <div style={{ marginTop: "210px" }}>
           <h2 style={{ display: "flex", justifyContent: "center" }}>
             신청 내역 문서보관함
           </h2>
