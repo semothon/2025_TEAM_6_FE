@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import styled from "styled-components";
+import React, { useState } from 'react';
+import styled from 'styled-components';
 
 const Calendar = ({
   selectedDate,
@@ -56,21 +56,65 @@ const Calendar = ({
   };
 
   const handleTimeSelect = (time) => {
+    // 이미 선택한 단일 시간 슬롯을 다시 클릭하면 해제
     if (selectedTimeRange.start === time && selectedTimeRange.end === time) {
       setSelectedTimeRange({ start: null, end: null });
-    } else if (!selectedTimeRange.start) {
+    } // 아직 아무 시간도 선택하지 않았을 경우(첫번째 클릭은 시작 시간 = 끝 시간)
+    else if (!selectedTimeRange.start) {
       setSelectedTimeRange({ start: time, end: time });
-    } else {
+    } // 이미 시작 시간이 있고, 두번째 시간 클릭한 경우(범위 형태로 지정됨.)
+    else if (
+      selectedTimeRange.start != null &&
+      selectedTimeRange.start == selectedTimeRange.end
+    ) {
+      setSelectedTimeRange((prev) => {
+        const newStart = Math.min(prev.start, time);
+        const newEnd = Math.max(prev.end, time);
+        return { start: newStart, end: newEnd };
+      });
+    } // 시작시간, 끝시간이 이미 범위로 지정된 상태에서 시작시간 or 끝시간을 눌렀을 때
+    else if (
+      selectedTimeRange.start !== null &&
+      selectedTimeRange.end !== null &&
+      selectedTimeRange.start !== selectedTimeRange.end &&
+      (selectedTimeRange.start === time || selectedTimeRange.end === time)
+    ) {
+      // time이 start 일때
+      if (selectedTimeRange.start === time) {
+        setSelectedTimeRange({
+          start: selectedTimeRange.end,
+          end: selectedTimeRange.end,
+        });
+      } // time이 end 일때
+      else {
+        setSelectedTimeRange({
+          start: selectedTimeRange.start,
+          end: selectedTimeRange.start,
+        });
+      }
+    } // 범위 선택되어있는 상태에서 바깥 박스 선택했을 때
+    else {
       setSelectedTimeRange((prev) => {
         const newStart = Math.min(prev.start, time);
         const newEnd = Math.max(prev.end, time);
         return { start: newStart, end: newEnd };
       });
     }
+
+    // else if (selectedTimeRange.start && selectedTimeRange.end === null) {
+    //   setSelectedTimeRange((prev) => {
+    //     const newStart = Math.min(prev.start, time);
+    //     const newEnd = Math.max(prev.end, time);
+    //     return { start: newStart, end: newEnd };
+    //   });
   };
 
   const weeks = groupDatesByWeek(startDay, endDay);
-  const timeSlots = Array.from({ length: 9 }, (_, i) => 18 + i * 0.5);
+  // time slot 선택하는 부분 : 18:00부터 22:00까지 30분 단위로
+  const timeSlots = Array.from({ length: 8 }, (_, i) => 18 + i * 0.5);
+
+  // label 따로 배열 추가함.
+  const timeLabels = Array.from({ length: 5 }, (_, i) => `${18 + i}:00`);
 
   return (
     <CalendarContainer>
@@ -82,8 +126,8 @@ const Calendar = ({
         <NextButton onClick={handleNextMonth}>▶</NextButton>
       </Header>
       <Grid>
-        {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
-          <Day key={day} style={{ fontWeight: "bold" }}>
+        {['일', '월', '화', '수', '목', '금', '토'].map((day) => (
+          <Day key={day} style={{ fontWeight: 'bold' }}>
             {day}
           </Day>
         ))}
@@ -95,17 +139,17 @@ const Calendar = ({
               color:
                 selectedDate &&
                 selectedDate.toDateString() === date.toDateString()
-                  ? "#fff"
+                  ? '#fff'
                   : date.getMonth() === month
-                  ? "black"
-                  : "#BFBFBF",
+                  ? 'black'
+                  : '#BFBFBF',
               backgroundColor:
                 selectedDate &&
                 selectedDate.toDateString() === date.toDateString()
-                  ? "#4F4F4F"
-                  : "transparent",
-              cursor: "pointer",
-              borderRadius: "10px",
+                  ? '#4F4F4F'
+                  : 'transparent',
+              cursor: 'pointer',
+              borderRadius: '10px',
             }}
           >
             {date.getDate()}
@@ -113,6 +157,7 @@ const Calendar = ({
         ))}
       </Grid>
       {selectedDate && (
+        // 여기부터 timeline 부분
         <TimeSelection>
           <TimeRow>
             {timeSlots.map((time, index) => (
@@ -125,10 +170,16 @@ const Calendar = ({
                     time <= selectedTimeRange.end
                   }
                 />
-                <TimeLabel>{`${Math.floor(time)}:${
-                  time % 1 === 0.5 ? "30" : "00"
-                }`}</TimeLabel>
               </TimeSlotContainer>
+            ))}
+            {/* 시간 라벨들 : 슬롯 사이에 배치되도록 30분단위가 아니고 1시간 단위로 함. */}
+            {timeLabels.map((label, index) => (
+              <TimeTick
+                key={index}
+                style={{ left: `${(index / (timeLabels.length - 1)) * 100}%` }}
+              >
+                {label}
+              </TimeTick>
             ))}
           </TimeRow>
         </TimeSelection>
@@ -141,7 +192,6 @@ export default Calendar;
 
 const CalendarContainer = styled.div`
   width: 650px;
-  height: 450px;
   text-align: center;
 `;
 
@@ -183,16 +233,22 @@ const TimeSelection = styled.div`
 `;
 
 const TimeRow = styled.div`
+  height: 60px;
+  margin-bottom: 20px;
+  width: 620px;
   display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
+  gap: 2px;
+
+  justify-content: space-between;
+  position: relative; // 라벨 위치 기준
 `;
 
 const TimeSlotContainer = styled.div`
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 10%;
+  width: 20%;
+  margin: 0px;
 `;
 
 const TimeLabel = styled.div`
@@ -201,10 +257,22 @@ const TimeLabel = styled.div`
 `;
 
 const TimeSlot = styled.div`
+  margin: 0px;
+  flex: 1;
+
   width: 100%;
   height: 60px;
   cursor: pointer;
-  background-color: ${(props) => (props.selected ? "#263A73" : "#F6F7F8")};
+  background-color: ${(props) => (props.selected ? '#263A73' : '#F6F7F8')};
   border-radius: 5px;
   transition: background-color 0.3s;
+`;
+
+const TimeTick = styled.div`
+  position: absolute;
+  top: 120%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: #888;
+  pointer-events: none;
 `;

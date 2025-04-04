@@ -1,5 +1,5 @@
-import CollegeList from "../components/CollegeList";
-import Header from "../components/Header";
+import CollegeList from '../components/CollegeList';
+import Header from '../components/Header';
 
 const Home = () => {
   return (

@@ -26,7 +26,7 @@ const ClassroomDetail = () => {
         state: {
           date: selectedDate.toDateString(),
           startTime: selectedTimeRange.start,
-          endTime: selectedTimeRange.end,
+          endTime: selectedTimeRange.end + 0.5,
           classroomInfo, // 예약 페이지에 정보 넘길 수 있음
           collegeName,
         },

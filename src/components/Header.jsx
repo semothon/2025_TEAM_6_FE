@@ -1,34 +1,60 @@
-import styled from "styled-components";
-import { useNavigate } from "react-router-dom";
-import khu from "../assets/images/KHU.png";
-import kyunghee from "../assets/images/KYUNGHEEUNIV.png";
+import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
+import khu from '../assets/images/KHU.png';
+import kyunghee from '../assets/images/KYUNGHEEUNIV.png';
+import React, { useState, useEffect, useRef } from 'react';
 
 // 모든 페이지에 있을 헤더
 const Header = ({ role }) => {
   const navigate = useNavigate();
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 문서보관함을 눌렀을 때
+  const dropdownRef = useRef(null); // 드롭다운 바깥 클릭 감지를 위한 ref 임.
+
+  const handleDropdownToggle = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
+  const handleMenuClick = (path) => {
+    setIsDropdownOpen(false);
+    navigate(path); // 여기서 이동?
+  };
+
+  // 문서보관함 외부 클릭 시 닫히게 처리
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setIsDropdownOpen(false);
+      }
+    };
+
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   return (
     <>
       <MainFrame>
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <img
             src={khu}
             alt="경희대학교"
-            style={{ width: "70px", marginLeft: "20px", marginRight: "15px" }}
+            style={{ width: '70px', marginLeft: '20px', marginRight: '15px' }}
           />
           <div
             style={{
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center", // 중앙 정렬 보장
-              gap: "2px", // 간격 최소화
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center', // 중앙 정렬 보장
+              gap: '2px', // 간격 최소화
             }}
           >
             <p
               style={{
-                fontSize: "26px",
-                fontWeight: "bold",
-                marginBottom: "5px",
+                fontSize: '26px',
+                fontWeight: 'bold',
+                marginBottom: '5px',
               }}
             >
               경희대학교 강의실 대여
@@ -37,26 +63,38 @@ const Header = ({ role }) => {
               src={kyunghee}
               alt="KyungHeeUniv"
               style={{
-                height: "30px",
-                marginTop: "-15px",
-                marginBottom: "20px",
+                height: '30px',
+                marginTop: '-15px',
+                marginBottom: '20px',
               }}
             />
           </div>
         </div>
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
           <MilestoneContainer>
-            <Milestone onClick={() => navigate("/home")}>강의실 안내</Milestone>
-            {role === "USER" ? (
-              <Milestone onClick={() => navigate("/report")}>
+            <Milestone onClick={() => navigate('/home')}>강의실 안내</Milestone>
+            {role === 'USER' ? (
+              <Milestone onClick={() => navigate('/report')}>
                 결과보고서 작성
               </Milestone>
             ) : (
-              ""
+              ''
             )}
-            <Milestone onClick={() => navigate("/document")}>
-              문서보관함
-            </Milestone>
+            {/* 문서보관함 버튼 여기부터 */}
+            <MilestoneWrapper ref={dropdownRef}>
+              <Milestone onClick={handleDropdownToggle}>문서보관함</Milestone>
+              {isDropdownOpen && (
+                <DropdownMenu>
+                  <DropdownItem onClick={() => handleMenuClick('/document')}>
+                    신청내역
+                  </DropdownItem>
+                  <Divider />
+                  <DropdownItem onClick={() => handleMenuClick('/document')}>
+                    결과보고서 내역
+                  </DropdownItem>
+                </DropdownMenu>
+              )}
+            </MilestoneWrapper>
           </MilestoneContainer>
           <ButtonContainer>
             <Button>로그인</Button>
@@ -97,7 +135,6 @@ const Milestone = styled.div`
   align-items: center;
   cursor: pointer;
   margin: 0 40px;
-  height: 100%; /* 높이를 header에 맞추거나 */
   padding: 10px 0; /* 텍스트 위아래 여백 확보 */
 `;
 
@@ -115,4 +152,37 @@ const Button = styled.button`
   color: #fff;
   border-radius: 20px;
   box-shadow: inset 0px 2px 4px rgba(0, 0, 0, 0.2);
+`;
+
+// 여기부터 밑에는 문서보관함 클릭시 나오는 박스 style
+
+const MilestoneWrapper = styled.div`
+  position: relative;
+`;
+
+const DropdownMenu = styled.div`
+  position: absolute; // 부모요소인 MilestoneWrapper를 기준으로 절대 위치 지정함.
+  top: 100%; // 부모 요소의 아래쪽으로 붙어서 위치함.
+  left: 20%; // 부모 요소의 아래쪽의 왼쪽 20% 위치부터 시작
+  background-color: white;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  border-radius: 4px;
+  z-index: 1001;
+`;
+const DropdownItem = styled.div`
+  padding: 10px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  white-space: nowrap;
+  color: black;
+  width: 130px;
+  &:hover {
+    background-color: #f2f2f2;
+  }
+`;
+const Divider = styled.div`
+  // 신청내역, 결과보고서내역 사이의 줄
+  height: 1px;
+  background-color: #ddd;
+  margin: 0 10px;
 `;
