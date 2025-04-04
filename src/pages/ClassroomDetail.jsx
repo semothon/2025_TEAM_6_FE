@@ -1,9 +1,9 @@
-import { useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import Header from "../components/Header";
-import pleImage from "../assets/images/maxple.png";
-import styled from "styled-components";
-import Calendar from "../components/Calendar";
+import { useState } from 'react';
+import { useNavigate, useLocation } from 'react-router-dom';
+import Header from '../components/Header';
+import pleImage from '../assets/images/maxple.png';
+import styled from 'styled-components';
+import Calendar from '../components/Calendar';
 
 const ClassroomDetail = () => {
   const location = useLocation();
@@ -22,15 +22,15 @@ const ClassroomDetail = () => {
       selectedTimeRange.start !== null &&
       selectedTimeRange.end !== null
     ) {
-      navigate("/reservation", {
+      navigate('/reservation', {
         state: {
           date: selectedDate.toDateString(),
           startTime: selectedTimeRange.start,
-          endTime: selectedTimeRange.end,
+          endTime: selectedTimeRange.end + 0.5,
         },
       });
     } else {
-      alert("날짜와 시간을 선택해주세요.");
+      alert('날짜와 시간을 선택해주세요.');
     }
   };
 
@@ -45,30 +45,30 @@ const ClassroomDetail = () => {
             src={classroom.image}
             alt={`${classroom.id}호`}
             style={{
-              width: "750px",
-              height: "450px",
-              borderRadius: "8px",
-              marginTop: "60px",
-              objectFit: "cover",
+              width: '750px',
+              height: '450px',
+              borderRadius: '8px',
+              marginTop: '60px',
+              objectFit: 'cover',
             }}
           />
-          <div style={{ display: "flex", alignItems: "baseline" }}>
+          <div style={{ display: 'flex', alignItems: 'baseline' }}>
             <h2>
               {classroom.id}호 | {college.name}
             </h2>
             <img
               src={pleImage}
               alt="인원"
-              style={{ width: "15px", marginLeft: "10px" }}
+              style={{ width: '15px', marginLeft: '10px' }}
             />
-            <p style={{ fontSize: "12px", marginLeft: "5px" }}>
+            <p style={{ fontSize: '12px', marginLeft: '5px' }}>
               정원 최대 {classroom.seats}명
             </p>
           </div>
 
           <div>
             <h2>유의사항</h2>
-            <div style={{ fontSize: "12px", color: "#626262" }}>
+            <div style={{ fontSize: '12px', color: '#626262' }}>
               <li>사용 후 반드시 정리정돈 (의자, 책상, 컴퓨터)</li>
               <li>
                 현수막 부착 시에 사용되는 양면테이프, 끈끈이, 풀 등 강의실이
@@ -87,9 +87,9 @@ const ClassroomDetail = () => {
             setSelectedDate={setSelectedDate}
             selectedTimeRange={selectedTimeRange}
             setSelectedTimeRange={setSelectedTimeRange}
-          />{" "}
+          />{' '}
           <Buttons>
-            <ListButton onClick={() => navigate("/home")}>목록</ListButton>
+            <ListButton onClick={() => navigate('/home')}>목록</ListButton>
             <ApplyButton onClick={handleReservation}>대여 신청</ApplyButton>
           </Buttons>
         </Rightside>

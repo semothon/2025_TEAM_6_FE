@@ -1,25 +1,25 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import classroom103 from "../assets/images/classroom_103.png";
-import classroom136 from "../assets/images/classroom_136.png";
-import classroom220 from "../assets/images/classroom_220.png";
-import classroom226 from "../assets/images/classroom_226.png";
-import classroom445 from "../assets/images/classroom_445.png";
-import classroom539 from "../assets/images/classroom_539.png";
-import pleImage from "../assets/images/maxple.png";
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import styled from 'styled-components';
+import classroom103 from '../assets/images/classroom_103.png';
+import classroom136 from '../assets/images/classroom_136.png';
+import classroom220 from '../assets/images/classroom_220.png';
+import classroom226 from '../assets/images/classroom_226.png';
+import classroom445 from '../assets/images/classroom_445.png';
+import classroom539 from '../assets/images/classroom_539.png';
+import pleImage from '../assets/images/maxple.png';
 
 const colleges = [
-  { id: 1, name: "공과대학관" },
-  { id: 2, name: "전자정보대학관" },
-  { id: 3, name: "응용과학대학관" },
-  { id: 4, name: "소프트웨어융합대학관" },
-  { id: 5, name: "생명과학대학관" },
-  { id: 6, name: "국제대학관" },
-  { id: 7, name: "외국어대학관" },
-  { id: 8, name: "예술디자인대학관" },
-  { id: 9, name: "체육대학관" },
-  { id: 10, name: "국제경영대학관" },
+  { id: 1, name: '공과대학관' },
+  { id: 2, name: '전자정보대학관' },
+  { id: 3, name: '응용과학대학관' },
+  { id: 4, name: '소프트웨어융합대학관' },
+  { id: 5, name: '생명과학대학관' },
+  { id: 6, name: '국제대학관' },
+  { id: 7, name: '외국어대학관' },
+  { id: 8, name: '예술디자인대학관' },
+  { id: 9, name: '체육대학관' },
+  { id: 10, name: '국제경영대학관' },
 ];
 
 const classrooms = {
@@ -38,9 +38,9 @@ const CollegeList = () => {
   // @단과대 목록으로 할건지 대학관 목록으로 할건지 결정해야 함
   const navigate = useNavigate();
   const [selectedCollege, setSelectedCollege] = useState(null);
-  const [date, setDate] = useState("");
-  const [startTime, setStartTime] = useState("");
-  const [endTime, setEndTime] = useState("");
+  const [date, setDate] = useState('');
+  const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   const [filteredRooms, setFilteredRooms] = useState(classrooms);
 
   const handleSearch = () => {
@@ -56,11 +56,11 @@ const CollegeList = () => {
 
   return (
     // 헤더 제외 높이를 최대 높이라 간주주
-    <div style={{ display: "flex", height: "calc(100vh - 200px)" }}>
+    <div style={{ display: 'flex', height: 'calc(100vh - 200px)' }}>
       {/* Sidebar */}
       <Sidebar>
         <Title>단과대 목록</Title>
-        <hr style={{ color: "#868686", width: "90%" }}></hr>
+        <hr style={{ color: '#868686', width: '90%' }}></hr>
         {colleges.map((college) => (
           <CollegeButton
             key={college.id}
@@ -80,7 +80,7 @@ const CollegeList = () => {
             <Input
               type="date"
               value={date}
-              placeholder={!date ? "날짜" : ""}
+              placeholder={!date ? '날짜' : ''}
               onChange={(e) => setDate(e.target.value)}
             />
             <Input
@@ -119,34 +119,34 @@ const CollegeList = () => {
                       src={room.image}
                       alt={`${room.id}호`}
                       style={{
-                        width: "375px",
-                        height: "180px",
-                        objectFit: "cover",
-                        borderRadius: "8px",
+                        width: '375px',
+                        height: '180px',
+                        objectFit: 'cover',
+                        borderRadius: '8px',
                       }}
                     />
-                    <p style={{ fontSize: "16px", fontWeight: "bold" }}>
-                      {room.id}호 |{" "}
-                      {selectedCollegeObj ? selectedCollegeObj.name : ""}{" "}
+                    <p style={{ fontSize: '16px', fontWeight: 'bold' }}>
+                      {room.id}호 |{' '}
+                      {selectedCollegeObj ? selectedCollegeObj.name : ''}{' '}
                     </p>
-                    <div style={{ display: "flex", alignItems: "baseline" }}>
+                    <div style={{ display: 'flex', alignItems: 'baseline' }}>
                       <img
                         src={pleImage}
                         alt="인원"
                         style={{
-                          width: "13px",
-                          height: "13px",
-                          marginRight: "5px",
+                          width: '13px',
+                          height: '13px',
+                          marginRight: '5px',
                         }}
                       />
-                      <p style={{ fontSize: "13px" }}>최대 {room.seats}명</p>
+                      <p style={{ fontSize: '13px' }}>최대 {room.seats}명</p>
                     </div>
                   </ClassroomCard>
                 ))}
               </ClassroomGrid>
             </>
           ) : (
-            <p style={{ color: "#6b7280" }}> 단과대를 선택해주세요 </p>
+            <p style={{ color: '#6b7280' }}> 단과대를 선택해주세요 </p>
           )}
         </Content>
       </Wrapper>
@@ -179,13 +179,13 @@ const CollegeButton = styled.button`
   padding: 15px 16px 15px 30px; // 왼쪽 여백만 늘려서 텍스트 들여쓰기
   margin-bottom: 8px;
   border: none;
-  background: ${(props) => (props.active ? "#EFF2F6" : "#fff")};
-  color: ${(props) => (props.active ? "#263A73" : "#868686")};
+  background: ${(props) => (props.active ? '#EFF2F6' : '#fff')};
+  color: ${(props) => (props.active ? '#263A73' : '#868686')};
   font-size: 18px;
-  font-weight: ${(props) => (props.active ? "bold" : "normal")};
+  font-weight: ${(props) => (props.active ? 'bold' : 'normal')};
   cursor: pointer;
   border-right: ${(props) =>
-    props.active ? "4px solid #263A73" : "4px solid transparent"};
+    props.active ? '4px solid #263A73' : '4px solid transparent'};
   border-radius: 0;
   transition: 0.3s;
 
