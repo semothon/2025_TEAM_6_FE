@@ -45,6 +45,7 @@ const CollegeList = () => {
         const res = await axios.get(
           `https://itsmeweb.store/api/classroom?classroomBuilding=${college.value}`
         );
+        console.log(res.data);
         if (res.data.result === "SUCCESS") {
           setClassroomList(res.data.data.roomPreviewInfos);
         } else {
@@ -117,6 +118,7 @@ const CollegeList = () => {
                         state: {
                           collegeName: selectedCollegeObj.name,
                           classroomInfo: {
+                            id: room.classroomId,
                             image: room.classroomImage,
                             number: room.classroomNumber,
                             capacity: room.classroomCapacity,
