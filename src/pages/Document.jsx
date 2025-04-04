@@ -1,4 +1,4 @@
-import UserHeader from "../components/Header/UserHeader";
+import Header from "../components/Header";
 import styled from "styled-components";
 import DocumentTable from "../components/DocumentTable";
 
@@ -19,7 +19,7 @@ const Document = () => {
 
   return (
     <>
-      <UserHeader />
+      <Header role="USER" />
       <PageWrapper>
         <div style={{ marginTop: "210px" }}>
           <h2 style={{ display: "flex", justifyContent: "center" }}>

@@ -1,6 +1,6 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
-import UserHeader from "../components/Header/UserHeader";
+import Header from "../components/Header";
 import { useRef, useState } from "react";
 import { VscClose } from "react-icons/vsc";
 import Modal from "../components/Modal";
@@ -55,7 +55,7 @@ const Reservation = () => {
 
   return (
     <>
-      <UserHeader />
+      <Header role="USER" />
       <PageWrapper>
         <Container>
           {date ? (

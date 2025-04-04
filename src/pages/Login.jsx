@@ -2,9 +2,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import dummyData from "../assets/dummy/login.json";
-import UserHeader from "../components/Header/UserHeader";
-import ManagerHeader from "../components/Header/ManagerHeader";
+import Header from "../components/Header";
 import backgroundImage from "../assets/images/loginBackground.png";
 import loginImage from "../assets/images/loginPle.png";
 
@@ -18,29 +16,72 @@ const Login = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState("");
   const [userPassword, setUserPassword] = useState("");
-  const [error, setError] = useState("");
-  const [activeButton, setActiveButton] = useState("user");
-  const [data, setData] = useState(null);
+  const [userRole, setUserRole] = useState("");
+  const [message, setMessage] = useState("");
+  const [activeButton, setActiveButton] = useState("USER");
 
-  useEffect(() => {
-    axios
-      .get(dummyData)
-      .then((response) => setData(response.data))
-      .catch((error) => console.error("Error loading JSON:", error));
-  }, []);
+  // Login.jsx:64 로그인 오류: AxiosError {message: 'Request failed with status code 500'}
+  const handleLogin = async (e) => {
+    e.preventDefault();
+
+    try {
+      const response = await axios.post(
+        "https://itsmeweb.store/api/login",
+        {
+          userId,
+          userPassword,
+          userRole: activeButton,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      const result = response.data;
+
+      if (result.result === "SUCCESS") {
+        // const { token, user } = result.data;
+
+        // // 로그인 정보 저장
+        // localStorage.setItem("accessToken", token);
+        // localStorage.setItem("user", JSON.stringify(user));
+        // localStorage.setItem("role", userRole);
+
+        setMessage(`${user.userName}님 환영합니다!`);
+        navigate("/home");
+      } else {
+        setMessage("로그인에 실패했습니다. 다시 확인해주세요.");
+      }
+    } catch (error) {
+      // 서버에서 에러 구조화해서 보내줌
+      if (error.response?.data?.error) {
+        setMessage(error.response.data.error.message); // 예: "존재하지 않는 아이디입니다."
+      } else {
+        setMessage("로그인 요청 중 오류가 발생했습니다.");
+      }
+
+      console.error("로그인 오류:", error);
+    }
+  };
 
   return (
     <>
-      {activeButton === "user" ? <UserHeader /> : <ManagerHeader />}
+      {activeButton === "USER" ? (
+        <Header role="USER" />
+      ) : (
+        <Header role="ADMIN" />
+      )}
       <PageWrapper>
         <Container>
-          <div style={{ display: "flex" }}>
+          <div style={{ display: "flex", marginBottom: "20px" }}>
             <img
               src={loginImage}
               alt="로그인"
-              style={{ width: "40px", marginRight: "10px" }}
+              style={{ width: "50px", marginRight: "10px" }}
             />
-            <div style={{ fontSize: "13px", textAlign: "left" }}>
+            <div style={{ fontSize: "16px", textAlign: "left" }}>
               경희대학교 강의실 대여 서비스에 오신걸 환영합니다.
               <br />
               로그인을 하시면 더 많은 강의실 대여 서비스를 이용하실 수 있습니다.
@@ -50,19 +91,19 @@ const Login = () => {
           <hr />
           <ButtonGroup>
             <StyledButton
-              active={activeButton === "user"}
-              onClick={() => setActiveButton("user")}
+              active={activeButton === "USER"}
+              onClick={() => setActiveButton("USER")}
             >
               사용자 로그인
             </StyledButton>
             <StyledButton
-              active={activeButton === "admin"}
-              onClick={() => setActiveButton("admin")}
+              active={activeButton === "ADMIN"}
+              onClick={() => setActiveButton("ADMIN")}
             >
               관리자 로그인
             </StyledButton>
           </ButtonGroup>
-          <LoginForm>
+          <LoginForm onSubmit={handleLogin}>
             <InputGroup>
               <Input
                 type="text"
@@ -79,12 +120,12 @@ const Login = () => {
                 required
               />
             </InputGroup>
-            <LoginButton>로그인</LoginButton>
+            <LoginButton type="submit">로그인</LoginButton>
           </LoginForm>
 
           <Options>
             <label>
-              <input type="checkbox" /> 아이디 저장
+              <input type="checkbox" /> 로그인 유지
             </label>
             <Links>
               <a href="#">아이디 찾기</a> | <a href="#">비밀번호 찾기</a> |{" "}
@@ -93,8 +134,6 @@ const Login = () => {
           </Options>
 
           <Notice>
-            {/* <pre>{JSON.stringify(data, null, 2)}</pre> */}
-
             <strong>📢 로그인 안내</strong>
             <ul>
               <li>통합정보시스템 학번/직번 로그인</li>
@@ -111,11 +150,12 @@ const Login = () => {
 
 export default Login;
 
+// 이미지는 헤더 높이를 포함해서 가운데 배치해야함
 const PageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* 뷰포트 전체 높이를 차지 */
+  height: 100vh; /* 뷰포트 전체 높이를 차지지 */
   width: 100vw; /* 뷰포트 전체 너비를 차지 */
   background-image: url(${backgroundImage});
   background-size: cover;
@@ -123,10 +163,10 @@ const PageWrapper = styled.div`
 
 const Container = styled.div`
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
-  padding: 20px;
-  border-radius: 8px;
+  padding: 50px;
+  border-radius: 15px;
   max-width: 1000px;
-  margin: 20px auto;
+  margin-top: 80px; /* Container는 헤더 제외 높이에서 가운데 위치치 */
   text-align: center;
   background-color: #fff;
 `;
@@ -134,8 +174,8 @@ const Container = styled.div`
 const StyledButton = styled.button`
   flex: 1;
   padding: 10px;
-  font-size: 14px;
-  font-weight: bold;
+  font-size: 18px;
+  font-weight: ${(props) => (props.active ? "bold" : "normal")}
   cursor: pointer;
   border-radius: 5px;
   border: 2px solid #263a73;
@@ -154,7 +194,7 @@ const ButtonGroup = styled.div`
   margin-top: 15px;
 `;
 
-const LoginForm = styled.div`
+const LoginForm = styled.form`
   display: flex;
   align-items: center; /* 입력 필드와 로그인 버튼을 수직 정렬 */
   gap: 10px; /* 입력 필드와 버튼 사이 간격 */
@@ -169,20 +209,21 @@ const InputGroup = styled.div`
 `;
 
 const Input = styled.input`
-  padding: 10px;
-  font-size: 14px;
-  border: 1px solid #ccc;
+  padding: 12px;
+  font-size: 12px;
+  border: 1px solid rgb(216, 216, 216);
   border-radius: 5px;
   width: 400px;
 
   &::placeholder {
     font-size: 13px;
+    color: #bababa;
   }
 `;
 
 const LoginButton = styled.button`
-  padding: 32px 20px;
-  font-size: 14px;
+  padding: 32px 40px;
+  font-size: 16px;
   font-weight: bold;
   cursor: pointer;
   border-radius: 5px;
