@@ -20,18 +20,68 @@ const Login = () => {
   const [message, setMessage] = useState("");
   const [activeButton, setActiveButton] = useState("USER");
 
-  // Login.jsx:64 로그인 오류: AxiosError {message: 'Request failed with status code 500'}
-  const handleLogin = async (e) => {
+  // const handleLogin = async (e) => {
+  //   e.preventDefault();
+
+  //   try {
+  //     const response = await axios.post(
+  //       "https://itsmeweb.store/api/user",
+  //       {
+  //         userId,
+  //         userPassword,
+  //         userRole: activeButton,
+  //       },
+  //       {
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //       }
+  //     );
+
+  //     const result = response.data;
+
+  //     if (result.result === "SUCCESS") {
+  //       const { token, user } = result.data || {};
+
+  //       if (token && user) {
+  //         // 로그인 정보 저장
+  //         localStorage.setItem("accessToken", token);
+  //         localStorage.setItem("user", JSON.stringify(user));
+  //         localStorage.setItem("role", userRole);
+
+  //         setMessage(`${user.userName}님 환영합니다!`);
+  //       } else {
+  //         setMessage("로그인 성공했지만 사용자 정보가 없습니다.");
+  //       }
+
+  //       if (activeButton === "USER") {
+  //         navigate("/home");
+  //       } else if (activeButton === "ADMIN") {
+  //         navigate("/admin/home");
+  //       }
+  //     } else {
+  //       const errorMessage =
+  //         result.error?.message || "로그인에 실패했습니다. 다시 확인해주세요.";
+  //       setMessage(errorMessage);
+  //     }
+  //   } catch (error) {
+  //     if (error.response?.data?.error) {
+  //       setMessage(error.response.data.error.message); // 예: "존재하지 않는 아이디입니다."
+  //     } else {
+  //       setMessage("로그인 요청 중 오류가 발생했습니다.");
+  //     }
+
+  //     console.error("로그인 오류:", error);
+  //   }
+  // };
+
+  const handleLoginDetail = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "https://itsmeweb.store/api/user",
-        {
-          userId,
-          userPassword,
-          userRole: activeButton,
-        },
+      // API 요청: userId와 activeButton(사용자/관리자)을 쿼리 파라미터로 전달
+      const response = await axios.get(
+        `https://itsmeweb.store/api/user?userId=${userId}&userRole=${activeButton}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -42,19 +92,15 @@ const Login = () => {
       const result = response.data;
 
       if (result.result === "SUCCESS") {
-        const { token, user } = result.data || {};
+        const userData = result.data;
+        console.log(userData);
+        // API 응답에는 토큰이 없으므로 사용자 정보만 저장합니다.
+        localStorage.setItem("user", JSON.stringify(userData));
+        localStorage.setItem("role", userData.userRole);
 
-        if (token && user) {
-          // 로그인 정보 저장
-          localStorage.setItem("accessToken", token);
-          localStorage.setItem("user", JSON.stringify(user));
-          localStorage.setItem("role", userRole);
+        setMessage(`${userData.userName}님 환영합니다!`);
 
-          setMessage(`${user.userName}님 환영합니다!`);
-        } else {
-          setMessage("로그인 성공했지만 사용자 정보가 없습니다.");
-        }
-
+        // 역할에 따라 페이지 이동 처리
         if (activeButton === "USER") {
           navigate("/home");
         } else if (activeButton === "ADMIN") {
@@ -67,11 +113,10 @@ const Login = () => {
       }
     } catch (error) {
       if (error.response?.data?.error) {
-        setMessage(error.response.data.error.message); // 예: "존재하지 않는 아이디입니다."
+        setMessage(error.response.data.error.message);
       } else {
         setMessage("로그인 요청 중 오류가 발생했습니다.");
       }
-
       console.error("로그인 오류:", error);
     }
   };
@@ -109,7 +154,7 @@ const Login = () => {
               관리자 로그인
             </StyledButton>
           </ButtonGroup>
-          <LoginForm onSubmit={handleLogin}>
+          <LoginForm onSubmit={handleLoginDetail}>
             <InputGroup>
               <Input
                 type="text"

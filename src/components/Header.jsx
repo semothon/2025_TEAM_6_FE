@@ -36,7 +36,10 @@ const Header = ({ role }) => {
   return (
     <>
       <MainFrame>
-        <div style={{ display: "flex", alignItems: "center" }}>
+        <div
+          style={{ display: "flex", alignItems: "center" }}
+          onClick={() => navigate("/home")}
+        >
           <img
             src={khu}
             alt="경희대학교"
