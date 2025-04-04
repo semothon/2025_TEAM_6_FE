@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { use, useState } from "react";
+import rightArrow from "../assets/images/rightArrow.png";
 
 const DocumentTable = ({ data }) => {
   const [selectedItem, setSelectedItem] = useState(null);
@@ -33,7 +34,14 @@ const DocumentTable = ({ data }) => {
                 <Td>{item.date}</Td>
                 <Td>
                   <ButtonContainer>
-                    <Button>내용 보기</Button>
+                    <Button>
+                      내용 보기
+                      <img
+                        src={rightArrow}
+                        alt="rightArrow"
+                        style={{ width: "15px", marginRight: "-8px" }}
+                      />
+                    </Button>
                   </ButtonContainer>
                 </Td>
                 <Td>
@@ -88,15 +96,15 @@ const Table = styled.table`
 const Th = styled.th`
   background-color: #fff;
   padding: 12px;
-  border-top: 2px solid #000000;
-  border-bottom: 2px solid #000000;
+  border-top: 1px solid #000000;
+  border-bottom: 1px solid #000000;
   text-align: center;
   font-size: 14px;
 `;
 
 const Td = styled.td`
   padding: 12px;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   text-align: center;
   font-size: 13px;
 `;
@@ -108,13 +116,16 @@ const ButtonContainer = styled.div`
 `;
 
 const Button = styled.button`
-  background-color: #444;
+  background-color: #4f4f4f;
   color: white;
-  padding: 5px 10px;
-  border: 2px sold #444;
+  padding: 8px 10px;
+  border: 1px sold #4f4f4f;
   cursor: pointer;
   border-radius: 5px;
   display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 90px;
   font-weight: bold;
   font-size: 12px;
 `;
@@ -122,11 +133,14 @@ const Button = styled.button`
 const ApprovalButton = styled.button`
   background-color: ${({ selected }) => (selected ? "#263a73" : "white")};
   color: ${({ selected }) => (selected ? "white" : "#263a73")};
-  padding: 5px 10px;
-  border: 2px solid #263a73;
+  padding: 8px 10px;
+  border: 1px solid #263a73;
   cursor: pointer;
   border-radius: 7px;
-  width: 80px;
+  width: 90px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   font-weight: bold;
   font-size: 12px;
 `;
@@ -134,11 +148,11 @@ const ApprovalButton = styled.button`
 const RefusalButton = styled.button`
   background-color: #263a73;
   color: #fff;
-  padding: 5px 10px;
-  border: 2px solid #263a73;
+  padding: 8px 10px;
+  border: 1px solid #263a73;
   cursor: pointer;
   border-radius: 7px;
-  width: 80px;
+  width: 90px;
   font-weight: bold;
   font-size: 12px;
 `;
