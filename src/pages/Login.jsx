@@ -44,9 +44,6 @@ const Login = () => {
       if (result.result === "SUCCESS") {
         const { token, user } = result.data || {};
 
-        console.log(result);
-        navigate("/home");
-
         if (token && user) {
           // 로그인 정보 저장
           localStorage.setItem("accessToken", token);
@@ -56,6 +53,12 @@ const Login = () => {
           setMessage(`${user.userName}님 환영합니다!`);
         } else {
           setMessage("로그인 성공했지만 사용자 정보가 없습니다.");
+        }
+
+        if (activeButton === "USER") {
+          navigate("/home");
+        } else if (activeButton === "ADMIN") {
+          navigate("/admin/home");
         }
       } else {
         const errorMessage =
