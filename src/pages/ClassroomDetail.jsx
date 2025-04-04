@@ -102,6 +102,7 @@ export default ClassroomDetail;
 
 const EntireWrapper = styled.div`
   display: flex;
+  height: 90vh;
 `;
 
 const Leftside = styled.div`

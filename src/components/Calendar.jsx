@@ -149,6 +149,7 @@ const Header = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+  margin-top: 10px;
   margin-bottom: 10px;
 `;
 
@@ -177,7 +178,7 @@ const Day = styled.div`
 `;
 
 const TimeSelection = styled.div`
-  margin-top: 65px;
+  margin-top: 30px;
   text-align: center;
 `;
 
@@ -201,7 +202,7 @@ const TimeLabel = styled.div`
 
 const TimeSlot = styled.div`
   width: 100%;
-  height: 40px;
+  height: 60px;
   cursor: pointer;
   background-color: ${(props) => (props.selected ? "#263A73" : "#F6F7F8")};
   border-radius: 5px;

@@ -125,7 +125,13 @@ const CollegeList = () => {
                         borderRadius: "8px",
                       }}
                     />
-                    <p style={{ fontSize: "16px", fontWeight: "bold" }}>
+                    <p
+                      style={{
+                        fontSize: "16px",
+                        fontWeight: "bold",
+                        marginBottom: "-8px",
+                      }}
+                    >
                       {room.id}호 |{" "}
                       {selectedCollegeObj ? selectedCollegeObj.name : ""}{" "}
                     </p>
@@ -198,7 +204,8 @@ const FilterContainer = styled.div`
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-bottom: 20px;
+  margin-top: -5px;
+  margin-bottom: 18px;
   background-color: #f0f0f0;
   padding: 7px 3px 7px;
   border: 1px solid #a0a0a0;
