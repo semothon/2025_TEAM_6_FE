@@ -196,7 +196,7 @@ const HiddenInput = styled.input`
 `;
 
 const FileUploadButton = styled.button`
-  background: #444;
+  background: #4f4f4f;
   color: white;
   padding: 10px;
   border: none;
@@ -217,7 +217,7 @@ const Button = styled.button`
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  background: ${(props) => (props.primary ? "#1d2951" : "#555")};
+  background: ${(props) => (props.primary ? "#1d2951" : "#4F4F4F")};
   color: white;
 `;
 

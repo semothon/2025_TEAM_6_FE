@@ -6,6 +6,7 @@ import Document from "./pages/Document";
 import ClassroomDetail from "./pages/ClassroomDetail";
 import Reservation from "./pages/Reservation";
 import Report from "./pages/Report";
+import AdminHome from "./pages/AdminHome";
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
       <Routes>
         <Route path="/" element={<Login />}></Route>
         <Route path="/home" element={<Home />}></Route>
+        <Route path="/admin/home" element={<AdminHome />}></Route>
         <Route
           path="/home/:collegeId/:classroomId"
           element={<ClassroomDetail />}

@@ -26,7 +26,7 @@ const Login = () => {
 
     try {
       const response = await axios.post(
-        "https://itsmeweb.store/api/login",
+        "https://itsmeweb.store/api/user",
         {
           userId,
           userPassword,
@@ -42,20 +42,30 @@ const Login = () => {
       const result = response.data;
 
       if (result.result === "SUCCESS") {
-        // const { token, user } = result.data;
+        const { token, user } = result.data || {};
 
-        // // 로그인 정보 저장
-        // localStorage.setItem("accessToken", token);
-        // localStorage.setItem("user", JSON.stringify(user));
-        // localStorage.setItem("role", userRole);
+        if (token && user) {
+          // 로그인 정보 저장
+          localStorage.setItem("accessToken", token);
+          localStorage.setItem("user", JSON.stringify(user));
+          localStorage.setItem("role", userRole);
 
-        setMessage(`${user.userName}님 환영합니다!`);
-        navigate("/home");
+          setMessage(`${user.userName}님 환영합니다!`);
+        } else {
+          setMessage("로그인 성공했지만 사용자 정보가 없습니다.");
+        }
+
+        if (activeButton === "USER") {
+          navigate("/home");
+        } else if (activeButton === "ADMIN") {
+          navigate("/admin/home");
+        }
       } else {
-        setMessage("로그인에 실패했습니다. 다시 확인해주세요.");
+        const errorMessage =
+          result.error?.message || "로그인에 실패했습니다. 다시 확인해주세요.";
+        setMessage(errorMessage);
       }
     } catch (error) {
-      // 서버에서 에러 구조화해서 보내줌
       if (error.response?.data?.error) {
         setMessage(error.response.data.error.message); // 예: "존재하지 않는 아이디입니다."
       } else {
@@ -68,11 +78,7 @@ const Login = () => {
 
   return (
     <>
-      {activeButton === "USER" ? (
-        <Header role="USER" />
-      ) : (
-        <Header role="ADMIN" />
-      )}
+      <Header role="USER" />
       <PageWrapper>
         <Container>
           <div style={{ display: "flex", marginBottom: "20px" }}>
