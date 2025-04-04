@@ -1,5 +1,5 @@
 import DocumentTable from "../components/DocumentTable";
-import UserHeader from "../components/Header/UserHeader";
+import Header from "../components/Header";
 import styled from "styled-components";
 
 const Report = () => {
@@ -10,7 +10,7 @@ const Report = () => {
   ];
   return (
     <>
-      <UserHeader />
+      <Header role="USER" />
       <PageWrapper>
         <ContentWrapper>
           <Title>신청 내역</Title>
