@@ -115,8 +115,12 @@ const CollegeList = () => {
                     onClick={() => {
                       navigate(`/home/${selectedCollege}/${room.classroomId}`, {
                         state: {
-                          college: colleges[selectedCollege - 1],
-                          classroom: room,
+                          collegeName: selectedCollegeObj.name,
+                          classroomInfo: {
+                            image: room.classroomImage,
+                            number: room.classroomNumber,
+                            capacity: room.classroomCapacity,
+                          },
                         },
                       });
                     }}

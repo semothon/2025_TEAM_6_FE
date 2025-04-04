@@ -8,7 +8,7 @@ import Calendar from "../components/Calendar";
 const ClassroomDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { college, classroom } = location.state || {};
+  const { collegeName, classroomInfo } = location.state || {};
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTimeRange, setSelectedTimeRange] = useState({
@@ -27,6 +27,8 @@ const ClassroomDetail = () => {
           date: selectedDate.toDateString(),
           startTime: selectedTimeRange.start,
           endTime: selectedTimeRange.end,
+          classroomInfo, // 예약 페이지에 정보 넘길 수 있음
+          collegeName,
         },
       });
     } else {
@@ -34,7 +36,9 @@ const ClassroomDetail = () => {
     }
   };
 
-  if (!classroom || !college) return <p>강의실 정보를 찾을 수 없습니다.</p>;
+  if (!classroomInfo || !collegeName) {
+    return <p>강의실 정보를 찾을 수 없습니다.</p>;
+  }
 
   return (
     <>
@@ -42,8 +46,8 @@ const ClassroomDetail = () => {
       <EntireWrapper>
         <Leftside>
           <img
-            src={classroom.image}
-            alt={`${classroom.id}호`}
+            src={classroomInfo.image}
+            alt={`${classroomInfo.number}호`}
             style={{
               width: "750px",
               height: "450px",
@@ -54,7 +58,7 @@ const ClassroomDetail = () => {
           />
           <div style={{ display: "flex", alignItems: "baseline" }}>
             <h2>
-              {classroom.id}호 | {college.name}
+              {classroomInfo.number}호 | {collegeName}
             </h2>
             <img
               src={pleImage}
@@ -62,7 +66,7 @@ const ClassroomDetail = () => {
               style={{ width: "15px", marginLeft: "10px" }}
             />
             <p style={{ fontSize: "12px", marginLeft: "5px" }}>
-              정원 최대 {classroom.seats}명
+              정원 최대 {classroomInfo.capacity}명
             </p>
           </div>
 
@@ -89,6 +93,7 @@ const ClassroomDetail = () => {
             setSelectedTimeRange={setSelectedTimeRange}
           />{" "}
           <Buttons>
+            {/* USER인지 ADMIN인지 내용 받기 -> 그거에 따라 목록 이동하는게 다름*/}
             <ListButton onClick={() => navigate("/home")}>목록</ListButton>
             <ApplyButton onClick={handleReservation}>대여 신청</ApplyButton>
           </Buttons>
