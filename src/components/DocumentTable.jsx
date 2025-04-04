@@ -86,16 +86,17 @@ const Table = styled.table`
 `;
 
 const Th = styled.th`
-  background-color: #f4f4f4;
+  background-color: #fff;
   padding: 12px;
-  border-bottom: 2px solid #ddd;
+  border-top: 2px solid #000000;
+  border-bottom: 2px solid #000000;
   text-align: center;
   font-size: 14px;
 `;
 
 const Td = styled.td`
   padding: 12px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.3);
   text-align: center;
   font-size: 13px;
 `;
