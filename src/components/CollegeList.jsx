@@ -1,19 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import classroom103 from "../assets/images/classroom_103.png";
-import classroom136 from "../assets/images/classroom_136.png";
-import classroom220 from "../assets/images/classroom_220.png";
-import classroom226 from "../assets/images/classroom_226.png";
-import classroom445 from "../assets/images/classroom_445.png";
-import classroom539 from "../assets/images/classroom_539.png";
+import axios from "axios";
 import pleImage from "../assets/images/maxple.png";
 
 const colleges = [
   { id: 1, name: "공과대학관" },
   { id: 2, name: "전자정보대학관" },
-  { id: 3, name: "응용과학대학관" },
-  { id: 4, name: "소프트웨어융합대학관" },
+  { id: 3, name: "응용과학대학관", value: "AppliedScience" },
+  { id: 4, name: "소프트웨어융합대학관", value: "SoftwareConvergence" },
   { id: 5, name: "생명과학대학관" },
   { id: 6, name: "국제대학관" },
   { id: 7, name: "외국어대학관" },
@@ -22,18 +17,6 @@ const colleges = [
   { id: 10, name: "국제경영대학관" },
 ];
 
-const classrooms = {
-  3: [{ id: 220, seats: 120 }],
-  4: [
-    { id: 103, seats: 60, image: classroom103 },
-    { id: 136, seats: 62, image: classroom136 },
-    { id: 220, seats: 75, image: classroom220 },
-    { id: 226, seats: 78, image: classroom226 },
-    { id: 445, seats: 56, image: classroom445 },
-    { id: 539, seats: 47, image: classroom539 },
-  ],
-};
-
 const CollegeList = () => {
   // @단과대 목록으로 할건지 대학관 목록으로 할건지 결정해야 함
   const navigate = useNavigate();
@@ -41,18 +24,41 @@ const CollegeList = () => {
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
-  const [filteredRooms, setFilteredRooms] = useState(classrooms);
+  // const [filteredRooms, setFilteredRooms] = useState(classrooms);
+  const [classroomList, setClassroomList] = useState([]);
 
   const handleSearch = () => {
     // 여기서 특정 시간에 대한 필터링 로직을 추가할 수 있음
     console.log(`검색 날짜: ${date}, 시작: ${startTime}, 종료: ${endTime}`);
-    setFilteredRooms(classrooms); // 현재는 전체 리스트 그대로 반환
   };
 
   /* id기반으로 된 단과대 이름을 표시하기 위함함 */
   const selectedCollegeObj = colleges.find(
     (college) => college.id === selectedCollege
   );
+
+  const handleCollegeClick = async (college) => {
+    setSelectedCollege(college.id);
+
+    if (college.value) {
+      try {
+        const res = await axios.get(
+          `https://itsmeweb.store/api/classroom?classroomBuilding=${college.value}`
+        );
+        if (res.data.result === "SUCCESS") {
+          setClassroomList(res.data.data.roomPreviewInfos);
+        } else {
+          console.error("API 오류:", res.data.error?.message);
+          setClassroomList([]);
+        }
+      } catch (err) {
+        console.error("요청 실패:", err);
+        setClassroomList([]);
+      }
+    } else {
+      setClassroomList([]);
+    }
+  };
 
   return (
     // 헤더 제외 높이를 최대 높이라 간주주
@@ -66,7 +72,7 @@ const CollegeList = () => {
             key={college.id}
             active={selectedCollege === college.id}
             onClick={() => {
-              setSelectedCollege(college.id);
+              handleCollegeClick(college);
             }}
           >
             {college.name}
@@ -100,14 +106,14 @@ const CollegeList = () => {
             />
             <SearchButton onClick={handleSearch}>검색하기</SearchButton>
           </FilterContainer>
-          {selectedCollege && classrooms[selectedCollege] ? (
+          {selectedCollege && classroomList.length > 0 ? (
             <>
               <ClassroomGrid>
-                {classrooms[selectedCollege].map((room) => (
+                {classroomList.map((room) => (
                   <ClassroomCard
-                    key={room.id}
+                    key={room.classroomId}
                     onClick={() => {
-                      navigate(`/home/${selectedCollege}/${room.id}`, {
+                      navigate(`/home/${selectedCollege}/${room.classroomId}`, {
                         state: {
                           college: colleges[selectedCollege - 1],
                           classroom: room,
@@ -116,8 +122,8 @@ const CollegeList = () => {
                     }}
                   >
                     <img
-                      src={room.image}
-                      alt={`${room.id}호`}
+                      src={room.classroomImage}
+                      alt={`${room.classroomNumber}호`}
                       style={{
                         width: "375px",
                         height: "180px",
@@ -132,8 +138,7 @@ const CollegeList = () => {
                         marginBottom: "-8px",
                       }}
                     >
-                      {room.id}호 |{" "}
-                      {selectedCollegeObj ? selectedCollegeObj.name : ""}{" "}
+                      {room.classroomNumber}호 | {selectedCollegeObj?.name}
                     </p>
                     <div style={{ display: "flex", alignItems: "baseline" }}>
                       <img
@@ -145,7 +150,9 @@ const CollegeList = () => {
                           marginRight: "5px",
                         }}
                       />
-                      <p style={{ fontSize: "13px" }}>최대 {room.seats}명</p>
+                      <p style={{ fontSize: "13px" }}>
+                        최대 {room.classroomCapacity}명
+                      </p>
                     </div>
                   </ClassroomCard>
                 ))}
