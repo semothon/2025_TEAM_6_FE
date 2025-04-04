@@ -1,8 +1,8 @@
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import khu from '../assets/images/KHU.png';
-import kyunghee from '../assets/images/KYUNGHEEUNIV.png';
-import React, { useState, useEffect, useRef } from 'react';
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import khu from "../assets/images/KHU.png";
+import kyunghee from "../assets/images/KYUNGHEEUNIV.png";
+import React, { useState, useEffect, useRef } from "react";
 
 // 모든 페이지에 있을 헤더
 const Header = ({ role }) => {
@@ -27,34 +27,34 @@ const Header = ({ role }) => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
 
   return (
     <>
       <MainFrame>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <img
             src={khu}
             alt="경희대학교"
-            style={{ width: '70px', marginLeft: '20px', marginRight: '15px' }}
+            style={{ width: "70px", marginLeft: "20px", marginRight: "15px" }}
           />
           <div
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center', // 중앙 정렬 보장
-              gap: '2px', // 간격 최소화
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center", // 중앙 정렬 보장
+              gap: "2px", // 간격 최소화
             }}
           >
             <p
               style={{
-                fontSize: '26px',
-                fontWeight: 'bold',
-                marginBottom: '5px',
+                fontSize: "26px",
+                fontWeight: "bold",
+                marginBottom: "5px",
               }}
             >
               경희대학교 강의실 대여
@@ -63,33 +63,35 @@ const Header = ({ role }) => {
               src={kyunghee}
               alt="KyungHeeUniv"
               style={{
-                height: '30px',
-                marginTop: '-15px',
-                marginBottom: '20px',
+                height: "30px",
+                marginTop: "-15px",
+                marginBottom: "20px",
               }}
             />
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <MilestoneContainer>
-            <Milestone onClick={() => navigate('/home')}>강의실 안내</Milestone>
-            {role === 'USER' ? (
-              <Milestone onClick={() => navigate('/report')}>
+            <Milestone onClick={() => navigate("/home")}>강의실 안내</Milestone>
+            {role === "USER" ? (
+              <Milestone onClick={() => navigate("/report")}>
                 결과보고서 작성
               </Milestone>
             ) : (
-              ''
+              ""
             )}
             {/* 문서보관함 버튼 여기부터 */}
             <MilestoneWrapper ref={dropdownRef}>
               <Milestone onClick={handleDropdownToggle}>문서보관함</Milestone>
               {isDropdownOpen && (
                 <DropdownMenu>
-                  <DropdownItem onClick={() => handleMenuClick('/document')}>
+                  <DropdownItem onClick={() => handleMenuClick("/document")}>
                     신청내역
                   </DropdownItem>
                   <Divider />
-                  <DropdownItem onClick={() => handleMenuClick('/document')}>
+                  <DropdownItem
+                    onClick={() => handleMenuClick("/document/report")}
+                  >
                     결과보고서 내역
                   </DropdownItem>
                 </DropdownMenu>
