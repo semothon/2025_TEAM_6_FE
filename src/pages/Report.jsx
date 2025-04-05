@@ -1,9 +1,9 @@
-import DocumentTable from "../components/DocumentTable";
-import Header from "../components/Header";
-import styled from "styled-components";
-import axios from "axios";
-import { useEffect, useState, useContext } from "react";
-import { UserContext } from "../context/userContext";
+import DocumentTable from '../components/DocumentTable';
+import Header from '../components/Header';
+import styled from 'styled-components';
+import axios from 'axios';
+import { useEffect, useState, useContext } from 'react';
+import { UserContext } from '../context/userContext';
 
 const Report = () => {
   // 로그인 정보 불러오기
@@ -21,13 +21,13 @@ const Report = () => {
     const fetchData = async () => {
       try {
         const approvedRes = await axios.get(
-          "https://itsmeweb.store/api/application",
+          'https://itsmeweb.store/api/application',
           {
             params: {
               userId,
-              status: "APPROVED",
+              status: 'APPROVED',
             },
-            headers: { accept: "application/json" },
+            headers: { accept: 'application/json' },
           }
         );
 
@@ -38,12 +38,12 @@ const Report = () => {
           applicationDate: item.applicationDate,
           classroom: item.classroom,
           semester: item.semester,
-          status: "선택",
+          status: '선택',
         }));
 
         setApprovedData(formattedData);
       } catch (error) {
-        console.error("데이터를 불러오는 데 실패했습니다:", error);
+        console.error('데이터를 불러오는 데 실패했습니다:', error);
       }
     };
 
@@ -72,7 +72,7 @@ const PageWrapper = styled.div`
   align-items: center;
   width: 100vw;
   height: 100vh;
-  margin-top: 80px;
+  margin-top: 70px;
 `;
 
 const ContentWrapper = styled.div`

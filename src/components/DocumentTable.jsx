@@ -3,6 +3,8 @@ import { useState, useContext, useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import rightArrow from "../assets/images/rightArrow.png";
 import { UserContext } from "../context/userContext";
+import Modal from "../components/Modal";
+
 import axios from "axios";
 
 const DocumentTable = ({ data }) => {
@@ -141,16 +143,24 @@ const DocumentTable = ({ data }) => {
               <Th style={{ textAlign: "start" }}>구분</Th>
               <Th>신청 강의실</Th>
               <Th>신청 날짜</Th>
-              <Th>신청 내용</Th>
-              <Th style={{ textAlign: "end", paddingRight: "45px" }}>상태</Th>
+              <Th style={{ textAlign: "end", paddingRight: "30px" }}>
+                신청 내용
+              </Th>
+              <Th style={{ textAlign: "end", paddingRight: "42px" }}>상태</Th>
             </tr>
           </thead>
           <tbody>
             {data.map((item, index) => (
               <tr key={index}>
-                <Td>대여</Td>
-                <Td>{item.classroom}</Td>
-                <Td>{item.applicationDate}</Td>
+                <Td style={{ textAlign: "start", paddingLeft: "12px" }}>
+                  대여
+                </Td>
+                <Td style={{ textAlign: "center", paddingLeft: "50px" }}>
+                  {item.classroom}
+                </Td>
+                <Td style={{ textAlign: "center", paddingLeft: "35px" }}>
+                  {item.applicationDate}
+                </Td>
                 <Td>
                   <ButtonContainer>
                     <Button onClick={() => showContent(item)}>
@@ -199,7 +209,9 @@ const DocumentTable = ({ data }) => {
           <DoubleInfoRow>
             <InfoBlock>
               <Label>사용 날짜</Label>
-              <span>{selectedItem.applicationDate}</span>
+              <span style={{ marginLeft: "15px" }}>
+                {selectedItem.applicationDate}
+              </span>
             </InfoBlock>
             <InfoBlock>
               <Label>사용 시간</Label>
@@ -211,7 +223,7 @@ const DocumentTable = ({ data }) => {
           <DoubleInfoRow>
             <InfoBlock>
               <Label>성명</Label>
-              <span>{userData.userName}</span>
+              <span style={{ marginLeft: "47px" }}>{userData.userName}</span>
             </InfoBlock>
             <InfoBlock>
               <Label>전화번호</Label>
@@ -237,46 +249,26 @@ const DocumentTable = ({ data }) => {
               />
             </div>
           </InfoRow>
-          <ButtonContainer>
-            <Button onClick={() => navigate("/home")}>이전 페이지</Button>
-            <Button
-              style={{ marginLeft: "5px" }}
-              primary
+          <ButtonContainer style={{ marginTop: "20px" }}>
+            <ButtonBackPage onClick={() => navigate("/home")}>
+              이전 페이지
+            </ButtonBackPage>
+            <ButtonBackPage
+              style={{ marginLeft: "8px" }}
+              $primary
               onClick={handleSubmit}
               disabled={!uploadUrl || isUploading}
             >
               {isUploading ? "업로드 중.." : "신청"}
-            </Button>
+            </ButtonBackPage>
           </ButtonContainer>
+
           {isModalOpen && (
-            <div
-              style={{
-                marginTop: "20px",
-                padding: "15px",
-                border: "1px solid #ccc",
-                borderRadius: "8px",
-                backgroundColor: "#f1f1f1",
-                textAlign: "center",
-              }}
-            >
-              <p style={{ margin: 0, fontWeight: "bold" }}>
-                신청이 성공적으로 완료되었습니다.
-              </p>
-              <button
-                style={{
-                  marginTop: "10px",
-                  padding: "8px 12px",
-                  border: "none",
-                  backgroundColor: "#263a73",
-                  color: "white",
-                  borderRadius: "4px",
-                  cursor: "pointer",
-                }}
-                onClick={() => setIsModalOpen(false)}
-              >
-                확인
-              </button>
-            </div>
+            <Modal
+              title="신청 완료"
+              message="신청이 성공적으로 완료되었습니다."
+              onClose={() => setIsModalOpen(false)}
+            />
           )}
         </InfoContainer>
       )}
@@ -315,14 +307,16 @@ const Td = styled.td`
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: right;
   align-items: center;
+  margin-top: 0px;
 `;
 
 const Button = styled.button`
+  width: 10px;
   background-color: #4f4f4f;
   color: white;
-  padding: 8px 10px;
+  padding: 7px 10px;
   border: 1px solid #4f4f4f;
   cursor: pointer;
   border-radius: 5px;
@@ -333,6 +327,20 @@ const Button = styled.button`
   font-weight: bold;
   font-size: 12px;
 `;
+const ButtonBackPage = styled.button`
+      width: 100px;
+  height: 40px;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background: ${(props) =>
+    props.$primary
+      ? "#1d2951"
+      : "#4F4F4F"};   // 버튼 속성이 primary이면 #1d2951 아니면 #4F4F4F
+  color: white;
+  #1d2951
+  `;
 
 const ApprovalButton = styled.button`
   background-color: ${({ selected }) => (selected ? "#263a73" : "white")};
@@ -366,7 +374,7 @@ const InfoContainer = styled.div`
   flex-direction: column;
   gap: 3px;
   margin-bottom: 30px;
-  margin-top: 20px;
+  margin-top: 0px;
   padding: 20px;
   border-radius: 10px;
   background-color: #fff;
@@ -375,7 +383,7 @@ const InfoContainer = styled.div`
 
 const Title = styled.h3`
   margin-bottom: 20px;
-  margin-top: 70px;
+  margin-top: 30px;
 `;
 
 const InfoRow = styled.div`
