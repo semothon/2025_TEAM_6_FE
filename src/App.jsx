@@ -9,6 +9,7 @@ import Reservation from "./pages/Reservation";
 import Report from "./pages/Report";
 import AdminHome from "./pages/AdminHome";
 import DocumentReport from "./pages/DocumentReport";
+import AppliedContent from "./pages/AppliedContent";
 
 const App = () => {
   return (
@@ -26,6 +27,7 @@ const App = () => {
           <Route path="/document" element={<Document />}></Route>
           <Route path="/reservation" element={<Reservation />}></Route>
           <Route path="/report" element={<Report />}></Route>
+          <Route path="/applied-content" element={<AppliedContent />}></Route>
         </Routes>
       </BrowserRouter>
     </UserProvider>
