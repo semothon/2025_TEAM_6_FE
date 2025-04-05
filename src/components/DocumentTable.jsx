@@ -29,8 +29,10 @@ const DocumentTable = ({ data }) => {
               <Th style={{ textAlign: 'start' }}>구분</Th>
               <Th>신청 강의실</Th>
               <Th>신청 날짜</Th>
-              <Th>신청 내용</Th>
-              <Th style={{ textAlign: 'end', paddingRight: '45px' }}>상태</Th>
+              <Th style={{ textAlign: 'end', paddingRight: '30px' }}>
+                신청 내용
+              </Th>
+              <Th style={{ textAlign: 'end', paddingRight: '42px' }}>상태</Th>
             </tr>
           </thead>
           <tbody>
@@ -120,7 +122,7 @@ const Td = styled.td`
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: center;
+  justify-content: right;
   align-items: center;
 `;
 
