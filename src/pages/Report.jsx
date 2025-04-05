@@ -10,9 +10,13 @@ const Report = () => {
   const { userData } = useContext(UserContext);
   const [approvedData, setApprovedData] = useState([]);
 
+  // userRole 불러오기
+  const userRole = userData.userRole;
+
   useEffect(() => {
     // userId 불러오기
     const userId = userData.userId;
+
     // 승인된 신청서만
     const fetchData = async () => {
       try {
@@ -48,7 +52,7 @@ const Report = () => {
 
   return (
     <>
-      <Header role="USER" />
+      <Header role={userRole} />
       <PageWrapper>
         <ContentWrapper>
           <Title>신청 내역</Title>
