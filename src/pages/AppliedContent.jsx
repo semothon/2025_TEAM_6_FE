@@ -1,9 +1,12 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useContext } from "react";
+import { UserContext } from "../context/userContext";
 import { VscClose } from "react-icons/vsc";
 import axios from "axios";
+import Modal from "../components/Modal";
+import RejectModal from "../components/RejectModal";
 
 // import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf"; // pdf 읽는 라이브러리 불러오기
 // import workerSrc from "pdfjs-dist/legacy/build/pdf.worker.min.js?url"; // 버전 이슈로 Web Worker을 사용
@@ -23,11 +26,19 @@ import axios from "axios";
 
 const AppliedContent = () => {
   const location = useLocation();
+  const { userData } = useContext(UserContext);
+
   const item = location.state?.item;
   const applicationId = item.applicationId;
+  const reportId = item.reportId;
   console.log("item", item);
   console.log("applicationId", applicationId);
   const [applicationDetail, setApplicationDetail] = useState(null); // 신청 상세 정보 상태 추가
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  // const [isRejectModalOpen, setIsRejectModalOpen] = useStat
+
+  // 현재 role 확인
+  const userRole = userData.userRole;
 
   useEffect(() => {
     if (applicationId) {
@@ -59,6 +70,27 @@ const AppliedContent = () => {
   };
 
   console.log("applicationDetail", applicationDetail);
+
+  const handleAdminApproval = async (reportId) => {
+    try {
+      const response = await axios.post(
+        `https://itsmeweb.store/api/application/approve?reportId=${reportId}`,
+        {},
+        {
+          headers: { accept: "application/json" },
+        }
+      );
+
+      if (response.data.result === "SUCCESS") {
+        setIsModalOpen(true); // 모달을 열어줌
+        fetchApplicationDetail(); // 데이터 갱신
+      } else {
+        alert(`처리 중 오류가 발생했습니다: ${response.data.error}`);
+      }
+    } catch (error) {
+      alert(`서버 오류가 발생했습니다: ${error.message}`);
+    }
+  };
 
   return (
     <>
@@ -126,7 +158,21 @@ const AppliedContent = () => {
                   ? "반려"
                   : ""}
               </InfoRow>
-
+              {userRole === "ADMIN" && applicationDetail && (
+                <ButtonContainer>
+                  <Button
+                    primary
+                    onClick={() =>
+                      handleAdminApproval(applicationDetail.reportId)
+                    }
+                  >
+                    승인
+                  </Button>
+                  <Button onClick={() => handleAdminApproval("REJECTED")}>
+                    반려
+                  </Button>
+                </ButtonContainer>
+              )}
               {applicationDetail.applicationRejectReason && (
                 <InfoRow>
                   <Label>반려 사유</Label>{" "}

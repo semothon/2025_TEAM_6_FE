@@ -14,74 +14,59 @@ const Document = () => {
   const [pendingData, setPendingData] = useState([]);
   const [completedData, setCompletedData] = useState([]);
   const [error, setError] = useState(null); // setError를 정의
+  const userId = userData.userId;
+  const userRole = userData.userRole;
+
+  const fetchData = async () => {
+    try {
+      const baseUrl = "https://itsmeweb.store/api/application";
+
+      const paramsWithUserId = (status) =>
+        userRole === "USER" ? { userId, status } : { status };
+
+      const [pendingRes, approvedRes, rejectedRes] = await Promise.all([
+        axios.get(baseUrl, {
+          params: paramsWithUserId("PENDING"),
+          headers: { accept: "application/json" },
+        }),
+        axios.get(baseUrl, {
+          params: paramsWithUserId("APPROVED"),
+          headers: { accept: "application/json" },
+        }),
+        axios.get(baseUrl, {
+          params: paramsWithUserId("REJECTED"),
+          headers: { accept: "application/json" },
+        }),
+      ]);
+
+      const pendingData = pendingRes.data?.data || [];
+      const approvedData = approvedRes.data?.data || [];
+      const rejectedData = rejectedRes.data?.data || [];
+
+      console.log("data", pendingRes.data);
+      const mapData = (data, statusLabel) =>
+        data.map((item) => ({
+          applicationId: item.applicaitonId,
+          applicationDate: item.applicationDate,
+          classroom: item.classroom,
+          semester: item.semester,
+          status: statusLabel,
+        }));
+
+      setPendingData(mapData(pendingData, "승인 대기"));
+      setCompletedData([
+        ...mapData(approvedData, "승인"),
+        ...mapData(rejectedData, "반려"),
+      ]);
+    } catch (err) {
+      console.error("신청 내역 데이터를 불러오는데 실패했습니다.", err);
+      setError("데이터를 불러오지 못했습니다.");
+    }
+  };
 
   useEffect(() => {
-    // userData가 준비되지 않았으면 실행하지 않음
-    if (!userData) return;
-
-    const userId = userData.userId;
-    // console.log("userID:", userId);
-
-    const fetchData = async () => {
-      try {
-        const baseUrl = "https://itsmeweb.store/api/application";
-
-        const [pendingRes, approvedRes, rejectedRes] = await Promise.all([
-          axios.get(baseUrl, {
-            params: { userId, status: "PENDING" },
-            headers: { accept: "application/json" },
-          }),
-          axios.get(baseUrl, {
-            params: { userId, status: "APPROVED" },
-            headers: { accept: "application/json" },
-          }),
-          axios.get(baseUrl, {
-            params: { userId, status: "REJECTED" },
-            headers: { accept: "application/json" },
-          }),
-        ]);
-
-        // console.log("pendingRes", pendingRes);
-        const pendingData = pendingRes.data?.data || [];
-        const approvedData = approvedRes.data?.data || [];
-        const rejectedData = rejectedRes.data?.data || [];
-
-        const pendingMapped = pendingData.map((item) => ({
-          applicationId: item.applicaitonId,
-          applicationDate: item.applicationDate,
-          classroom: item.classroom,
-          semester: item.semester,
-          status: "승인 대기",
-        }));
-
-        // console.log("pendingMapped", pendingMapped);
-
-        const approvedMapped = approvedData.map((item) => ({
-          applicationId: item.applicaitonId,
-          applicationDate: item.applicationDate,
-          classroom: item.classroom,
-          semester: item.semester,
-          status: "승인",
-        }));
-
-        const rejectedMapped = rejectedData.map((item) => ({
-          applicationId: item.applicaitonId,
-          applicationDate: item.applicationDate,
-          classroom: item.classroom,
-          semester: item.semester,
-          status: "반려",
-        }));
-
-        setPendingData(pendingMapped);
-        setCompletedData([...approvedMapped, ...rejectedMapped]);
-      } catch (err) {
-        console.error("신청 내역 데이터를 불러오는데 실패했습니다.", err);
-        setError("데이터를 불러오지 못했습니다.");
-      }
-    };
-
     fetchData();
-  }, [userData]);
+  }, [userData, userRole, userId]);
 
   return (
     <>
