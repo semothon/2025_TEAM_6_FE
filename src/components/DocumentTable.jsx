@@ -1,7 +1,7 @@
-import styled from "styled-components";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import rightArrow from "../assets/images/rightArrow.png";
+import styled from 'styled-components';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import rightArrow from '../assets/images/rightArrow.png';
 
 const DocumentTable = ({ data }) => {
   const navigate = useNavigate();
@@ -17,7 +17,7 @@ const DocumentTable = ({ data }) => {
 
   const showContent = (item) => {
     // console.log("item", item);
-    navigate("/applied-content", { state: { item } });
+    navigate('/applied-content', { state: { item } });
   };
 
   return (
@@ -26,17 +26,19 @@ const DocumentTable = ({ data }) => {
         <Table>
           <thead>
             <tr>
-              <Th style={{ textAlign: "start" }}>구분</Th>
+              <Th style={{ textAlign: 'start' }}>구분</Th>
               <Th>신청 강의실</Th>
               <Th>신청 날짜</Th>
               <Th>신청 내용</Th>
-              <Th style={{ textAlign: "end", paddingRight: "45px" }}>상태</Th>
+              <Th style={{ textAlign: 'end', paddingRight: '45px' }}>상태</Th>
             </tr>
           </thead>
           <tbody>
             {data.map((item, index) => (
               <tr key={index}>
-                <Td>대여</Td>
+                <Td style={{ textAlign: 'start', paddingLeft: '12px' }}>
+                  대여
+                </Td>
                 <Td>{item.classroom}</Td>
                 <Td>{item.applicationDate}</Td>
                 <Td>
@@ -46,20 +48,20 @@ const DocumentTable = ({ data }) => {
                       <img
                         src={rightArrow}
                         alt="rightArrow"
-                        style={{ width: "15px", marginRight: "-8px" }}
+                        style={{ width: '15px', marginRight: '-8px' }}
                       />
                     </Button>
                   </ButtonContainer>
                 </Td>
                 <Td>
                   <ButtonContainer>
-                    {item.status === "승인" ||
-                    item.status === "승인 대기" ||
-                    item.status === "선택" ? (
+                    {item.status === '승인' ||
+                    item.status === '승인 대기' ||
+                    item.status === '선택' ? (
                       <ApprovalButton
                         selected={selectedItem === item}
                         onClick={() =>
-                          item.status === "선택" ? showInfo(item) : null
+                          item.status === '선택' ? showInfo(item) : null
                         }
                       >
                         {item.status}
@@ -138,8 +140,8 @@ const Button = styled.button`
 `;
 
 const ApprovalButton = styled.button`
-  background-color: ${({ selected }) => (selected ? "#263a73" : "white")};
-  color: ${({ selected }) => (selected ? "white" : "#263a73")};
+  background-color: ${({ selected }) => (selected ? '#263a73' : 'white')};
+  color: ${({ selected }) => (selected ? 'white' : '#263a73')};
   padding: 8px 10px;
   border: 1px solid #263a73;
   cursor: pointer;
