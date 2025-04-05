@@ -119,9 +119,9 @@ const DocumentTable = ({ data }) => {
           },
         }
       );
+      console.log("response.data", response.data);
 
       if (response.data.result === "SUCCESS") {
-        console.log("response.data", response.data);
         setIsModalOpen(true);
       } else {
         alert("신청 실패: " + (response.data.error?.message || "오류 발생"));

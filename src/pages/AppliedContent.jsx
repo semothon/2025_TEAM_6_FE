@@ -26,14 +26,14 @@ const AppliedContent = () => {
   const item = location.state?.item;
   const applicationId = item.applicationId;
   console.log("item", item);
-  console.log("application", item);
+  console.log("applicationId", applicationId);
   const [applicationDetail, setApplicationDetail] = useState(null); // 신청 상세 정보 상태 추가
 
   useEffect(() => {
     if (applicationId) {
-      fetchApplicationDetail(applicationId);
+      fetchApplicationDetail();
     }
-  }, [item]);
+  }, [applicationId]);
 
   // 신청 상세 정보 요청
   const fetchApplicationDetail = async () => {
@@ -41,10 +41,11 @@ const AppliedContent = () => {
       const response = await axios.get(
         "https://itsmeweb.store/api/application/detail",
         {
-          params: { applicationId },
+          params: { applicationId }, // 이건 바깥의 applicationId를 그대로 사용
           headers: { accept: "application/json" },
         }
       );
+      console.log("response.data", response.data);
       if (response.data.result === "SUCCESS") {
         const detail = response.data.data;
         console.log("detail", detail);
@@ -65,10 +66,12 @@ const AppliedContent = () => {
       <Container>
         {/* 이미지 미리보기 */}
         <PreviewWrapper>
-          <PreviewImage
-            src={applicationDetail.applicationUrl}
-            alt="신청서 이미지"
-          />
+          {applicationDetail && (
+            <PreviewImage
+              src={applicationDetail.applicationUrl}
+              alt="신청서 이미지"
+            />
+          )}
         </PreviewWrapper>
         {/* 신청 상세 정보 */}
         {applicationDetail && (
