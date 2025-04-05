@@ -1,9 +1,9 @@
-import Header from "../components/Header";
-import styled from "styled-components";
-import DocumentTable from "../components/DocumentTable";
-import { useState, useContext, useEffect } from "react";
-import { UserContext } from "../context/userContext";
-import axios from "axios";
+import Header from '../components/Header';
+import styled from 'styled-components';
+import DocumentTable from '../components/DocumentTable';
+import { useState, useContext, useEffect } from 'react';
+import { UserContext } from '../context/userContext';
+import axios from 'axios';
 
 const DocumentReport = () => {
   // userId를 위해 Context로 로그인 내용 받아오기
@@ -22,20 +22,20 @@ const DocumentReport = () => {
 
     const fetchData = async () => {
       try {
-        const baseUrl = "https://itsmeweb.store/api/report";
+        const baseUrl = 'https://itsmeweb.store/api/report';
 
         const [pendingRes, approvedRes, rejectedRes] = await Promise.all([
           axios.get(baseUrl, {
-            params: { userId, status: "PENDING" },
-            headers: { accept: "application/json" },
+            params: { userId, status: 'PENDING' },
+            headers: { accept: 'application/json' },
           }),
           axios.get(baseUrl, {
-            params: { userId, status: "APPROVED" },
-            headers: { accept: "application/json" },
+            params: { userId, status: 'APPROVED' },
+            headers: { accept: 'application/json' },
           }),
           axios.get(baseUrl, {
-            params: { userId, status: "REJECTED" },
-            headers: { accept: "application/json" },
+            params: { userId, status: 'REJECTED' },
+            headers: { accept: 'application/json' },
           }),
         ]);
 
@@ -43,7 +43,7 @@ const DocumentReport = () => {
         const approvedReport = approvedRes.data?.data || [];
         const rejectedReport = rejectedRes.data?.data || [];
 
-        console.log("pendingReport", pendingReport);
+        console.log('pendingReport', pendingReport);
 
         const pendingMapped = pendingReport.map((item) => ({
           reportId: item.reportId,
@@ -52,7 +52,7 @@ const DocumentReport = () => {
           reportSubmittedAt: item.reportSubmittedAt,
           classroom: item.classroom,
           semester: item.semester,
-          status: "승인 대기",
+          status: '승인 대기',
         }));
 
         const approvedMapped = approvedReport.map((item) => ({
@@ -62,7 +62,7 @@ const DocumentReport = () => {
           reportSubmittedAt: item.reportSubmittedAt,
           classroom: item.classroom,
           semester: item.semester,
-          status: "승인",
+          status: '승인',
         }));
 
         const rejectedMapped = rejectedReport.map((item) => ({
@@ -72,13 +72,13 @@ const DocumentReport = () => {
           reportSubmittedAt: item.reportSubmittedAt,
           classroom: item.classroom,
           semester: item.semester,
-          status: "반려",
+          status: '반려',
         }));
         setPendingReport(pendingMapped);
         setCompletedReport([...approvedMapped, ...rejectedMapped]);
       } catch (err) {
-        console.error("신청 내역 데이터를 불러오는데 실패했습니다.", err);
-        setError("데이터를 불러오지 못했습니다.");
+        console.error('신청 내역 데이터를 불러오는데 실패했습니다.', err);
+        setError('데이터를 불러오지 못했습니다.');
       }
     };
 
@@ -90,7 +90,7 @@ const DocumentReport = () => {
       <Header role="USER" />
       <PageWrapper>
         <div>
-          <h2 style={{ display: "flex", justifyContent: "center" }}>
+          <h2 style={{ display: 'flex', justifyContent: 'center' }}>
             결과보고서 문서보관함
           </h2>
           <h3>진행중인 결과보고서 신청내역</h3>
@@ -113,5 +113,5 @@ const PageWrapper = styled.div`
   align-items: center;
   height: 100vh; /* 뷰포트 전체 높이를 차지 */
   width: 99vw; /* 뷰포트 전체 너비를 차지 */
-  margin-top: 20px;
+  margin-top: 80px;
 `;

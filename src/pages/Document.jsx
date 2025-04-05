@@ -112,5 +112,5 @@ const PageWrapper = styled.div`
   // 이거 주석처리
   // height: 100vh; /* 뷰포트 전체 높이를 차지 */
   width: 99vw; /* 뷰포트 전체 너비를 차지 */
-  margin-top: 110px;
+  margin-top: 50px;
 `;
