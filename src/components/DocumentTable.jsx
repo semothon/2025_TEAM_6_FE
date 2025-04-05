@@ -153,8 +153,12 @@ const DocumentTable = ({ data }) => {
                 <Td style={{ textAlign: 'start', paddingLeft: '12px' }}>
                   대여
                 </Td>
-                <Td>{item.classroom}</Td>
-                <Td>{item.applicationDate}</Td>
+                <Td style={{ textAlign: 'center', paddingLeft: '50px' }}>
+                  {item.classroom}
+                </Td>
+                <Td style={{ textAlign: 'center', paddingLeft: '35px' }}>
+                  {item.applicationDate}
+                </Td>
                 <Td>
                   <ButtonContainer>
                     <Button onClick={() => showContent(item)}>
@@ -245,7 +249,7 @@ const DocumentTable = ({ data }) => {
             <Button onClick={() => navigate('/home')}>이전 페이지</Button>
             <Button
               style={{ marginLeft: '5px' }}
-              primary
+              $primary
               onClick={handleSubmit}
               disabled={!uploadUrl || isUploading}
             >
