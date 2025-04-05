@@ -129,7 +129,7 @@ const CollegeList = () => {
     }
   };
 
-  console.log("classroomList", classroomList);
+  // console.log("classroomList", classroomList);
 
   return (
     // 헤더 제외 높이를 최대 높이라 간주
