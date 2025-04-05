@@ -166,11 +166,21 @@ const AppliedContent = () => {
                   </span>
                 </InfoRow>
                 {userRole === 'ADMIN' && applicationDetail && (
-                  <ButtonContainer>
-                    <Button $primary onClick={handleAdminApproval}>
+                  <ButtonContainer style={{ marginTop: '80px' }}>
+                    <ButtonBackPage>이전페이지</ButtonBackPage>
+                    <ButtonBottom $primary onClick={handleAdminApproval}>
                       승인
-                    </Button>
-                    <Button>반려</Button>
+                    </ButtonBottom>
+                    <ButtonBottom
+                      style={{
+                        marginLeft: '3px',
+                        border: '2px solid #1d2951',
+                        background: 'white',
+                        color: '#1d2951',
+                      }}
+                    >
+                      반려
+                    </ButtonBottom>
                   </ButtonContainer>
                 )}
                 {applicationDetail.applicationRejectReason && (
@@ -292,16 +302,31 @@ const FileUploadButton = styled.button`
 
 const ButtonContainer = styled.div`
   display: flex;
-  justify-content: flex-end;
+  // justify-content: flex-end;
   gap: 10px;
 `;
-
-const Button = styled.button`
+const ButtonBottom = styled.button`
+  width: 100px;
+  height: 40px;
+  margin-left: auto;
+  padding: 10px 10px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  background: ${(props) =>
+    props.$primary
+      ? '#1d2951'
+      : '#4F4F4F'};   // 버튼 속성이 primary이면 #1d2951 아니면 #4F4F4F
+  color: white;
+  #1d2951
+  `;
+const ButtonBackPage = styled.button`
+  margin-right: auto;
   padding: 10px 20px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  background: ${(props) => (props.primary ? '#1d2951' : '#555')};
+  background: #4f4f4f;
   color: white;
 `;
 

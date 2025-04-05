@@ -1,18 +1,18 @@
-import styled from "styled-components";
-import { useState, useContext, useEffect, useRef } from "react";
-import { useNavigate } from "react-router-dom";
-import rightArrow from "../assets/images/rightArrow.png";
-import { UserContext } from "../context/userContext";
-import Modal from "../components/Modal";
-import axios from "axios";
+import styled from 'styled-components';
+import { useState, useContext, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
+import rightArrow from '../assets/images/rightArrow.png';
+import { UserContext } from '../context/userContext';
+import Modal from '../components/Modal';
+import axios from 'axios';
 
 const DocumentTable = ({ data }) => {
   const navigate = useNavigate();
   const [selectedItem, setSelectedItem] = useState(null);
   // selectedItem.applicationId = applicationId!!!!!!!!!
   const [timeInfo, setTimeInfo] = useState({
-    applicationStart: "",
-    applicationEnd: "",
+    applicationStart: '',
+    applicationEnd: '',
   });
   const { userData } = useContext(UserContext);
 
@@ -42,10 +42,10 @@ const DocumentTable = ({ data }) => {
 
         setTimeInfo({ applicationStart, applicationEnd });
       } catch (error) {
-        console.error("시간 정보 가져오기 실패:", error);
+        console.error('시간 정보 가져오기 실패:', error);
         setTimeInfo({
-          applicationStart: "불러오기 실패",
-          applicationEnd: "불러오기 실패",
+          applicationStart: '불러오기 실패',
+          applicationEnd: '불러오기 실패',
         });
       }
     };
@@ -62,7 +62,7 @@ const DocumentTable = ({ data }) => {
   };
 
   const showContent = (item) => {
-    navigate("/applied-content", { state: { item } });
+    navigate('/applied-content', { state: { item } });
   };
 
   const handleButtonClick = () => {
@@ -78,30 +78,30 @@ const DocumentTable = ({ data }) => {
     setIsUploading(true);
 
     const formData = new FormData();
-    formData.append("file", file);
+    formData.append('file', file);
 
     try {
       const response = await axios.post(
-        "https://itsmeweb.store/api/application/upload",
+        'https://itsmeweb.store/api/application/upload',
         formData,
         {
           headers: {
-            "Content-Type": "multipart/form-data",
-            accept: "application/json",
+            'Content-Type': 'multipart/form-data',
+            accept: 'application/json',
           },
         }
       );
 
-      if (response.data.result === "SUCCESS") {
+      if (response.data.result === 'SUCCESS') {
         const applicationUrl = response.data.data.applicationUrl;
-        console.log("applicationUrl", applicationUrl);
+        console.log('applicationUrl', applicationUrl);
         setUploadUrl(applicationUrl);
       } else {
-        console.error("업로드 실패:", response.data.error);
+        console.error('업로드 실패:', response.data.error);
         setUploadUrl(null);
       }
     } catch (error) {
-      console.error("파일 업로드 중 오류:", error);
+      console.error('파일 업로드 중 오류:', error);
       setUploadUrl(null);
     } finally {
       setIsUploading(false);
@@ -118,25 +118,25 @@ const DocumentTable = ({ data }) => {
       };
 
       const response = await axios.post(
-        "https://itsmeweb.store/api/report",
+        'https://itsmeweb.store/api/report',
         payload,
         {
           headers: {
-            "Content-Type": "application/json",
-            accept: "application/json",
+            'Content-Type': 'application/json',
+            accept: 'application/json',
           },
         }
       );
-      console.log("response.data", response.data);
+      console.log('response.data', response.data);
 
-      if (response.data.result === "SUCCESS") {
+      if (response.data.result === 'SUCCESS') {
         setIsModalOpen(true);
       } else {
-        alert("신청 실패: " + (response.data.error?.message || "오류 발생"));
+        alert('신청 실패: ' + (response.data.error?.message || '오류 발생'));
       }
     } catch (error) {
-      console.error("신청 요청 실패:", error);
-      alert("요청 실패. 다시 시도해주세요.");
+      console.error('신청 요청 실패:', error);
+      alert('요청 실패. 다시 시도해주세요.');
     }
   };
 
@@ -146,9 +146,9 @@ const DocumentTable = ({ data }) => {
 
     try {
       await navigator.clipboard.writeText(url);
-      alert("링크가 클립보드에 복사되었습니다.");
+      alert('링크가 클립보드에 복사되었습니다.');
     } catch (err) {
-      alert("링크 복사에 실패했습니다.");
+      alert('링크 복사에 실패했습니다.');
       console.error(err);
     }
   };
@@ -159,25 +159,25 @@ const DocumentTable = ({ data }) => {
         <Table>
           <thead>
             <tr>
-              <Th style={{ textAlign: "start" }}>구분</Th>
+              <Th style={{ textAlign: 'start' }}>구분</Th>
               <Th>신청 강의실</Th>
               <Th>신청 날짜</Th>
-              <Th style={{ textAlign: "end", paddingRight: "30px" }}>
+              <Th style={{ textAlign: 'end', paddingRight: '30px' }}>
                 신청 내용
               </Th>
-              <Th style={{ textAlign: "end", paddingRight: "42px" }}>상태</Th>
+              <Th style={{ textAlign: 'end', paddingRight: '42px' }}>상태</Th>
             </tr>
           </thead>
           <tbody>
             {data.map((item, index) => (
               <tr key={index}>
-                <Td style={{ textAlign: "start", paddingLeft: "12px" }}>
+                <Td style={{ textAlign: 'start', paddingLeft: '12px' }}>
                   대여
                 </Td>
-                <Td style={{ textAlign: "center", paddingLeft: "50px" }}>
+                <Td style={{ textAlign: 'center', paddingLeft: '50px' }}>
                   {item.classroom}
                 </Td>
-                <Td style={{ textAlign: "center", paddingLeft: "35px" }}>
+                <Td style={{ textAlign: 'center', paddingLeft: '35px' }}>
                   {item.applicationDate}
                 </Td>
                 <Td>
@@ -187,37 +187,37 @@ const DocumentTable = ({ data }) => {
                       <img
                         src={rightArrow}
                         alt="rightArrow"
-                        style={{ width: "15px", marginRight: "-8px" }}
+                        style={{ width: '15px', marginRight: '-8px' }}
                       />
                     </Button>
                   </ButtonContainer>
                 </Td>
                 <Td>
                   <ButtonContainer>
-                    {item.status === "승인" ||
-                    item.status === "승인 대기" ||
-                    item.status === "선택" ? (
+                    {item.status === '승인' ||
+                    item.status === '승인 대기' ||
+                    item.status === '선택' ? (
                       <ApprovalButton
-                        selected={selectedItem === item}
-                        hovered={hoveredItem === item} // 🔥 이 줄 추가
+                        $selected={selectedItem === item}
+                        $hovered={hoveredItem === item} // 🔥 이 줄 추가
                         onMouseEnter={() =>
-                          item.status === "승인 대기" && setHoveredItem(item)
+                          item.status === '승인 대기' && setHoveredItem(item)
                         }
                         onMouseLeave={() => setHoveredItem(null)}
                         onClick={() => {
-                          if (item.status === "선택") {
+                          if (item.status === '선택') {
                             showInfo(item);
                           } else if (
-                            item.status === "승인 대기" &&
+                            item.status === '승인 대기' &&
                             hoveredItem === item
                           ) {
                             handleCopyLink(item.applicationId);
                           }
                         }}
                       >
-                        {hoveredItem === item && item.status === "승인 대기"
-                          ? "링크 복사"
-                          : item.status}{" "}
+                        {hoveredItem === item && item.status === '승인 대기'
+                          ? '링크 복사'
+                          : item.status}{' '}
                       </ApprovalButton>
                     ) : (
                       <RefusalButton>{item.status}</RefusalButton>
@@ -233,7 +233,7 @@ const DocumentTable = ({ data }) => {
       {selectedItem && (
         <InfoContainer>
           <Title>강의실 대여 결과보고서 신청</Title>
-          <hr style={{ margin: "0px" }} />
+          <hr style={{ margin: '0px' }} />
 
           <InfoRow>
             <Label>신청 강의실</Label>
@@ -242,7 +242,7 @@ const DocumentTable = ({ data }) => {
           <DoubleInfoRow>
             <InfoBlock>
               <Label>사용 날짜</Label>
-              <span style={{ marginLeft: "15px" }}>
+              <span style={{ marginLeft: '15px' }}>
                 {selectedItem.applicationDate}
               </span>
             </InfoBlock>
@@ -256,7 +256,7 @@ const DocumentTable = ({ data }) => {
           <DoubleInfoRow>
             <InfoBlock>
               <Label>성명</Label>
-              <span style={{ marginLeft: "47px" }}>{userData.userName}</span>
+              <span style={{ marginLeft: '47px' }}>{userData.userName}</span>
             </InfoBlock>
             <InfoBlock>
               <Label>전화번호</Label>
@@ -265,9 +265,9 @@ const DocumentTable = ({ data }) => {
           </DoubleInfoRow>
           <InfoRow>
             <Label>첨부파일</Label>
-            <div style={{ display: "flex", flexDirection: "column" }}>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
               {selectedOne.length !== 0 ? (
-                <span style={{ marginLeft: "20px" }}>{attachFile}</span>
+                <span style={{ marginLeft: '20px' }}>{attachFile}</span>
               ) : (
                 <NotDownload>파일을 첨부할 수 있습니다.</NotDownload>
               )}
@@ -282,17 +282,17 @@ const DocumentTable = ({ data }) => {
               />
             </div>
           </InfoRow>
-          <ButtonContainer style={{ marginTop: "20px" }}>
-            <ButtonBackPage onClick={() => navigate("/home")}>
+          <ButtonContainer style={{ marginTop: '20px' }}>
+            <ButtonBackPage onClick={() => navigate('/home')}>
               이전 페이지
             </ButtonBackPage>
             <ButtonBackPage
-              style={{ marginLeft: "8px" }}
+              style={{ marginLeft: '8px' }}
               $primary
               onClick={handleSubmit}
               disabled={!uploadUrl || isUploading}
             >
-              {isUploading ? "업로드 중.." : "신청"}
+              {isUploading ? '업로드 중..' : '신청'}
             </ButtonBackPage>
           </ButtonContainer>
 
@@ -369,17 +369,17 @@ const ButtonBackPage = styled.button`
   cursor: pointer;
   background: ${(props) =>
     props.$primary
-      ? "#1d2951"
-      : "#4F4F4F"};   // 버튼 속성이 primary이면 #1d2951 아니면 #4F4F4F
+      ? '#1d2951'
+      : '#4F4F4F'};   // 버튼 속성이 primary이면 #1d2951 아니면 #4F4F4F
   color: white;
   #1d2951
   `;
 
 const ApprovalButton = styled.button`
   background-color: ${({ selected, hovered }) =>
-    hovered ? "#263a73" : selected ? "#263a73" : "white"};
+    hovered ? '#263a73' : selected ? '#263a73' : 'white'};
   color: ${({ selected, hovered }) =>
-    hovered || selected ? "white" : "#263a73"};
+    hovered || selected ? 'white' : '#263a73'};
   padding: 8px 10px;
   border: 1px solid #263a73;
   cursor: pointer;
