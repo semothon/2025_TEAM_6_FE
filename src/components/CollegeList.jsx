@@ -146,7 +146,7 @@ const CollegeList = () => {
                       src={room.classroomImage}
                       alt={`${room.classroomNumber}호`}
                       style={{
-                        width: '375px',
+                        width: '345px',
                         height: '180px',
                         objectFit: 'cover',
                         borderRadius: '8px',
@@ -161,7 +161,13 @@ const CollegeList = () => {
                     >
                       {room.classroomNumber}호 | {selectedCollegeObj?.name}
                     </p>
-                    <div style={{ display: 'flex', alignItems: 'baseline' }}>
+                    <div
+                      style={{
+                        display: 'flex',
+                        alignItems: 'baseline',
+                        height: '30px',
+                      }}
+                    >
                       <img
                         src={pleImage}
                         alt="인원"
@@ -225,6 +231,11 @@ const CollegeButton = styled.button`
 
   &:hover {
     background: #eff2f6;
+  }
+  &:focus,
+  &:active {
+    outline: none;
+    box-shadow: none;
   }
 `;
 
