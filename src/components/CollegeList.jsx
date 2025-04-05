@@ -231,7 +231,7 @@ const CollegeList = () => {
                       src={room.classroomImage}
                       alt={`${room.classroomNumber}호`}
                       style={{
-                        width: "400px",
+                        width: "390px",
                         height: "180px",
                         objectFit: "cover",
                         borderRadius: "8px",
