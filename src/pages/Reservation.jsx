@@ -152,7 +152,7 @@ const Reservation = () => {
           {date ? (
             <div>
               <Title>강의실 대여 신청</Title>
-              <hr />
+              <hr style={{ margin: "0px" }} />
               <InfoContainer>
                 <InfoRow>
                   <Label>신청 강의실</Label>
@@ -162,7 +162,7 @@ const Reservation = () => {
                 <DoubleInfoRow>
                   <InfoBlock>
                     <Label>신청 날짜</Label>
-                    <span>{formattedDate}</span>
+                    <span style={{ marginLeft: "15px" }}>{formattedDate}</span>
                   </InfoBlock>
                   <InfoBlock>
                     <Label>신청 시간</Label>
@@ -177,11 +177,11 @@ const Reservation = () => {
                 <DoubleInfoRow>
                   <InfoBlock>
                     <Label>성명</Label>
-                    <span>000</span>
+                    <span style={{ marginLeft: "47px" }}>000</span>
                   </InfoBlock>
                   <InfoBlock>
                     <Label>전화번호</Label>
-                    <span>010-0000-0000</span>
+                    <span style={{ marginLeft: "6px" }}>010-0000-0000</span>
                   </InfoBlock>
                 </DoubleInfoRow>
 
@@ -189,7 +189,7 @@ const Reservation = () => {
                   <Label>첨부파일</Label>
                   <div style={{ display: "flex", flexDirection: "column" }}>
                     {selectedOne.length !== 0 ? (
-                      <span>{attachFile}</span>
+                      <span style={{ marginLeft: "20px" }}>{attachFile}</span>
                     ) : (
                       <NotDownload>파일을 첨부할 수 있습니다.</NotDownload>
                     )}{" "}
@@ -206,9 +206,10 @@ const Reservation = () => {
                 </InfoRow>
               </InfoContainer>
               <ButtonContainer>
-                <Button onClick={() => navigate("/home")}>목록</Button>
+                <Button onClick={() => navigate("/home")}>이전 페이지</Button>
                 <Button
-                  $primary
+                  style={{ marginLeft: "5px" }}
+                  primary
                   onClick={handleSubmit}
                   disabled={!uploadResponse || isUploading}
                 >
@@ -257,14 +258,14 @@ const Title = styled.h2`
 const InfoContainer = styled.div`
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-bottom: 20px;
+  gap: 3px;
+  margin-bottom: 30px;
 `;
 
 const InfoRow = styled.div`
   display: flex;
   justify-content: left;
-  padding: 10px;
+  padding: 13px;
   border-bottom: 1px solid #ddd;
 `;
 
@@ -272,7 +273,7 @@ const DoubleInfoRow = styled.div`
   display: flex;
   justify-content: space-between;
   gap: 20px;
-  padding: 10px;
+  padding: 13px;
   border-bottom: 1px solid #ddd;
 `;
 
@@ -299,22 +300,31 @@ const FileUploadButton = styled.button`
   border-radius: 4px;
   cursor: pointer;
   margin-top: 10px;
-  width: 150px;
+  margin-bottom: 5px;
+  margin-left: 19px;
+  width: 120px;
 `;
 
 const ButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   gap: 10px;
+  margin-top: 80px;
 `;
 
 const Button = styled.button`
-  padding: 10px 20px;
+  width: 130px;
+  height: 50px;
+  padding: 10px 10px;
   border: none;
   border-radius: 4px;
   cursor: pointer;
-  background: ${(props) => (props.primary ? "#1d2951" : "#4F4F4F")};
+  background: ${(props) =>
+    props.primary
+      ? "#1d2951"
+      : "#4F4F4F"};   // 버튼 속성이 primary이면 #1d2951 아니면 #4F4F4F
   color: white;
+  #1d2951
 `;
 
 const AttFile = styled.div`
@@ -337,5 +347,6 @@ const AttFile = styled.div`
 `;
 
 const NotDownload = styled.div`
+  margin-left: 20px;
   font-size: 14px;
 `;
