@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
@@ -25,12 +25,24 @@ const colleges = [
 const CollegeList = () => {
   // @단과대 목록으로 할건지 대학관 목록으로 할건지 결정해야 함
   const navigate = useNavigate();
-  const [selectedCollege, setSelectedCollege] = useState(null);
+  // 페이지 화면 시작을 "소프트웨어융합대학"으로 설정
+  const defaultCollege = colleges.find(
+    (college) => college.value === "SoftwareConvergence"
+  );
+  const [selectedCollege, setSelectedCollege] = useState(
+    defaultCollege?.id || null
+  );
   const [date, setDate] = useState("");
   const [startTime, setStartTime] = useState("");
   const [endTime, setEndTime] = useState("");
   // const [filteredRooms, setFilteredRooms] = useState(classrooms);
   const [classroomList, setClassroomList] = useState([]);
+
+  useEffect(() => {
+    if (defaultCollege) {
+      handleCollegeClick(defaultCollege);
+    }
+  }, []);
 
   const handleSearch = () => {
     // 여기서 특정 시간에 대한 필터링 로직을 추가할 수 있음
