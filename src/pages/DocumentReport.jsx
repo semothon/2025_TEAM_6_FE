@@ -1,0 +1,49 @@
+import Header from "../components/Header";
+import styled from "styled-components";
+import DocumentTable from "../components/DocumentTable";
+
+const DocumentReport = () => {
+  const requestDataING = [
+    { room: "539호", date: "2025.03.21", message: "승인 대기" },
+    { room: "220호", date: "2025.03.26", message: "승인 대기" },
+    { room: "226호", date: "2025.03.28", message: "승인 대기" },
+    { room: "445호", date: "2025.04.02", message: "승인 대기" },
+  ];
+
+  const requestDataED = [
+    { room: "539호", date: "2025.03.21", message: "승인" },
+    { room: "220호", date: "2025.03.26", message: "승인" },
+    { room: "226호", date: "2025.03.28", message: "반려" },
+    { room: "445호", date: "2025.04.02", message: "반려" },
+  ];
+
+  return (
+    <>
+      <Header role="USER" />
+      <PageWrapper>
+        <div style={{ marginTop: "210px" }}>
+          <h2 style={{ display: "flex", justifyContent: "center" }}>
+            결과보고서 문서보관함
+          </h2>
+          <h3>진행중인 결과보고서 신청내역</h3>
+          <DocumentTable data={requestDataING} />
+          <br></br>
+          <h3>완료된 결과보고서 내역</h3>
+          <DocumentTable data={requestDataED} />
+          <br></br>
+        </div>
+      </PageWrapper>
+    </>
+  );
+};
+
+export default DocumentReport;
+
+const PageWrapper = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* 뷰포트 전체 높이를 차지 */
+  width: 100vw; /* 뷰포트 전체 너비를 차지 */
+  margin-top: 20px;
+`;

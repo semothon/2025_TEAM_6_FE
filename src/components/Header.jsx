@@ -1,12 +1,15 @@
-import styled from 'styled-components';
-import { useNavigate } from 'react-router-dom';
-import khu from '../assets/images/KHU.png';
-import kyunghee from '../assets/images/KYUNGHEEUNIV.png';
-import React, { useState, useEffect, useRef } from 'react';
+import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import khu from "../assets/images/KHU.png";
+import kyunghee from "../assets/images/KYUNGHEEUNIV.png";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { UserContext } from "../context/userContext";
 
 // 모든 페이지에 있을 헤더
 const Header = ({ role }) => {
   const navigate = useNavigate();
+  // 로그인 정보 받아오기 -> Context로 전역으로 접근 및 사용 가능
+  const { userData, setUserData } = useContext(UserContext);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 문서보관함을 눌렀을 때
   const dropdownRef = useRef(null); // 드롭다운 바깥 클릭 감지를 위한 ref 임.
 
@@ -16,7 +19,7 @@ const Header = ({ role }) => {
 
   const handleMenuClick = (path) => {
     setIsDropdownOpen(false);
-    navigate(path); // 여기서 이동?
+    navigate(path);
   };
 
   // 문서보관함 외부 클릭 시 닫히게 처리
@@ -27,34 +30,50 @@ const Header = ({ role }) => {
       }
     };
 
-    document.addEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
+      document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // 로그인 또는 로그아웃
+  const handleAuthClick = () => {
+    if (userData) {
+      // 로그아웃 처리: localStorage 초기화 및 Context 초기화
+      localStorage.removeItem("user");
+      localStorage.removeItem("role");
+      setUserData(null);
+      navigate("/");
+    } else {
+      navigate("/");
+    }
+  };
 
   return (
     <>
       <MainFrame>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div
+          style={{ display: "flex", alignItems: "center" }}
+          onClick={() => navigate("/home")}
+        >
           <img
             src={khu}
             alt="경희대학교"
-            style={{ width: '70px', marginLeft: '20px', marginRight: '15px' }}
+            style={{ width: "70px", marginLeft: "20px", marginRight: "15px" }}
           />
           <div
             style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center', // 중앙 정렬 보장
-              gap: '2px', // 간격 최소화
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center", // 중앙 정렬 보장
+              gap: "2px", // 간격 최소화
             }}
           >
             <p
               style={{
-                fontSize: '26px',
-                fontWeight: 'bold',
-                marginBottom: '5px',
+                fontSize: "26px",
+                fontWeight: "bold",
+                marginBottom: "5px",
               }}
             >
               경희대학교 강의실 대여
@@ -63,33 +82,35 @@ const Header = ({ role }) => {
               src={kyunghee}
               alt="KyungHeeUniv"
               style={{
-                height: '30px',
-                marginTop: '-15px',
-                marginBottom: '20px',
+                height: "30px",
+                marginTop: "-15px",
+                marginBottom: "20px",
               }}
             />
           </div>
         </div>
-        <div style={{ display: 'flex', alignItems: 'center' }}>
+        <div style={{ display: "flex", alignItems: "center" }}>
           <MilestoneContainer>
-            <Milestone onClick={() => navigate('/home')}>강의실 안내</Milestone>
-            {role === 'USER' ? (
-              <Milestone onClick={() => navigate('/report')}>
+            <Milestone onClick={() => navigate("/home")}>강의실 안내</Milestone>
+            {role === "USER" ? (
+              <Milestone onClick={() => navigate("/report")}>
                 결과보고서 작성
               </Milestone>
             ) : (
-              ''
+              ""
             )}
             {/* 문서보관함 버튼 여기부터 */}
             <MilestoneWrapper ref={dropdownRef}>
               <Milestone onClick={handleDropdownToggle}>문서보관함</Milestone>
               {isDropdownOpen && (
                 <DropdownMenu>
-                  <DropdownItem onClick={() => handleMenuClick('/document')}>
+                  <DropdownItem onClick={() => handleMenuClick("/document")}>
                     신청내역
                   </DropdownItem>
                   <Divider />
-                  <DropdownItem onClick={() => handleMenuClick('/document')}>
+                  <DropdownItem
+                    onClick={() => handleMenuClick("/document/report")}
+                  >
                     결과보고서 내역
                   </DropdownItem>
                 </DropdownMenu>
@@ -97,7 +118,9 @@ const Header = ({ role }) => {
             </MilestoneWrapper>
           </MilestoneContainer>
           <ButtonContainer>
-            <Button>로그인</Button>
+            <Button onClick={handleAuthClick}>
+              {userData ? "로그아웃" : "로그인"}
+            </Button>{" "}
             <Button>ENG</Button>
           </ButtonContainer>
         </div>

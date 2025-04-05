@@ -4,38 +4,76 @@ import Header from "../components/Header";
 import { useRef, useState } from "react";
 import { VscClose } from "react-icons/vsc";
 import Modal from "../components/Modal";
+import axios from "axios";
 
 const Reservation = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const fileInputRef = useRef(null);
-  const { date, startTime, endTime } = location.state || {};
+  // classroomInfo -> Object -> {id, image, number, capacity}
+  const { date, startTime, endTime, classroomInfo, collgeName } =
+    location.state || {};
+
+  // date 형태 변형. Tue Apr 15 2025 -> 2025-04-15
+  const originalDate = date;
+  const dateObj = new Date(originalDate);
+  const year = dateObj.getFullYear();
+  const month = (dateObj.getMonth() + 1).toString().padStart(2, "0");
+  const day = dateObj.getDate().toString().padStart(2, "0");
+  const formattedDate = `${year}-${month}-${day}`;
 
   // 화면에 출력되는 파일
   const [selectedOne, setSelectedOne] = useState([]);
   // 서버에 보내지는 파일
   const [selectedFiles, setSelectedFiles] = useState(null);
-  // 신청하면 뜨는 모달달
+  // 신청하면 뜨는 모달
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // 업로드 응답 객체 전체를 저장할 상태 변수 생성
+  const [uploadResponse, setUploadResponse] = useState(null);
+  // 파일 업로드 로딩 상태
+  const [isUploading, setIsUploading] = useState(false);
 
-  const onSelectFile = (e) => {
+  // "파일 업로드" 버튼을 누를 때때
+  // 파일 업로드를 하고 applicationParticipant, applicationPurpose, applicationUrl을 받음
+  const onSelectFile = async (e) => {
     e.preventDefault();
+    if (!e.target.files || e.target.files.length === 0) return;
 
-    if (!e.target.files) return;
+    const file = e.target.files[0];
 
-    const selectedFiles = e.target.files;
+    // UI에 파일 이름 업데이트
+    setSelectedOne((prev) => [...prev, file.name]);
+    setSelectedFiles(file);
 
-    setSelectedFiles(selectedFiles);
+    // FormData 객체 생성
+    const formData = new FormData();
+    formData.append("file", file); // 백엔드가 기대하는 키 이름("file")과 일치해야 함
 
-    // 브라우저 상에 보여질 파일 이름 리스트 업데이트
-    const fileArray = Array.from(selectedFiles).map((file) => file.name);
-    setSelectedOne((prev) => [...prev, ...fileArray]);
-
-    // 파일 선택 후, input 값 초기화
-    e.target.value = "";
+    // 업로드 시작 시 로딩 상태 true로 설정
+    setIsUploading(true);
+    try {
+      const response = await axios.post(
+        "https://itsmeweb.store/api/application/upload",
+        formData,
+        {
+          headers: {
+            // axios가 자동으로 올바른 Content-Type과 boundary를 설정하므로,
+            // 명시적으로 설정하지 않아도 무방
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      console.log("✅ 업로드 성공:", response.data);
+      setUploadResponse(response.data);
+    } catch (err) {
+      console.error("❌ 업로드 실패:", err);
+    } finally {
+      // 업로드 완료 후 로딩 상태 false로 설정
+      setIsUploading(false);
+    }
   };
 
-  // 브라우저 상에 보여질 첨부파일 리스트
+  // 첨부파일 이름들을 보여줄 UI
   const attachFile =
     selectedOne &&
     selectedOne.map((file, index) => (
@@ -50,7 +88,58 @@ const Reservation = () => {
     ));
 
   const handleButtonClick = () => {
-    fileInputRef.current.click(); // 버튼 클릭 시 input[type="file"] 클릭 실행
+    fileInputRef.current.click(); // 파일 업로드 버튼 클릭 시 파일 선택 input을 실행
+  };
+
+  // "신청" 버튼 클릭 시 호출될 함수: 지정된 형태로 payload를 구성하여 서버에 전송
+  const handleSubmit = async () => {
+    // startTime과 endTime은 예: 18.5, 22.0 등으로 전달되며, .5인 경우 30분, 정수면 00분으로 변환
+    const startHour = Math.floor(startTime);
+    const startMinute = startTime % 1 === 0.5 ? 30 : 0;
+    const endHour = Math.floor(endTime);
+    const endMinute = endTime % 1 === 0.5 ? 30 : 0;
+
+    // 두 자릿수 형식의 문자열로 변환 ("18" -> "18", "8" -> "08")
+    const formattedStartTime = `${startHour
+      .toString()
+      .padStart(2, "0")}:${startMinute.toString().padStart(2, "0")}:00`;
+    const formattedEndTime = `${endHour.toString().padStart(2, "0")}:${endMinute
+      .toString()
+      .padStart(2, "0")}:00`;
+
+    // 요청에 보낼 payload 구성 (제공해주신 JSON 형태에 맞춤)
+    const payload = {
+      userId: "2023105715", // 실제 사용자 아이디로 대체 필요
+      classroomId: classroomInfo.id,
+      applicationUseDate: formattedDate, // "YYYY-MM-DD"
+      applicationStart: formattedStartTime,
+      applicationEnd: formattedEndTime,
+      // uploadResponse의 필드를 참조하여 payload에 적용
+      applicationPurpose: uploadResponse
+        ? uploadResponse.applicationPurspose
+        : "",
+      applicationParticipants: uploadResponse
+        ? uploadResponse.applicationParticipants
+        : "", // 참여 인원
+      applicationUrl: uploadResponse ? uploadResponse.applicationUrl : "", // 업로드된 파일의 URL (없으면 빈 문자열)
+    };
+    console.log("applicationStart", payload.applicationStart);
+
+    try {
+      const response = await axios.post(
+        "https://itsmeweb.store/api/application",
+        payload
+      );
+      console.log("응답 데이터:", response.data);
+      // 응답 형태: { "result": "SUCCESS", "data": {}, "error": { "code": "string", "message": "string" } }
+      if (response.data.result === "SUCCESS") {
+        setIsModalOpen(true);
+      } else {
+        console.error("서버 에러:", response.data.error.message);
+      }
+    } catch (err) {
+      console.error("요청 실패:", err);
+    }
   };
 
   return (
@@ -65,12 +154,13 @@ const Reservation = () => {
               <InfoContainer>
                 <InfoRow>
                   <Label>신청 강의실</Label>
-                  <span>103호</span>
+                  {/* classroomInfo는 객체로, {image, number, capacity} 속성 보유 */}
+                  <span>{classroomInfo.number}호</span>
                 </InfoRow>
                 <DoubleInfoRow>
                   <InfoBlock>
                     <Label>신청 날짜</Label>
-                    <span>{date}</span>
+                    <span>{formattedDate}</span>
                   </InfoBlock>
                   <InfoBlock>
                     <Label>신청 시간</Label>
@@ -108,15 +198,19 @@ const Reservation = () => {
                       type="file"
                       ref={fileInputRef}
                       onChange={onSelectFile}
-                      accept=".pdf, .doc, .docx"
+                      accept=".pdf, .doc, .docx, .png, .jpg"
                     />
                   </div>
                 </InfoRow>
               </InfoContainer>
               <ButtonContainer>
                 <Button onClick={() => navigate("/home")}>목록</Button>
-                <Button primary onClick={() => setIsModalOpen(true)}>
-                  신청
+                <Button
+                  $primary
+                  onClick={handleSubmit}
+                  disabled={!uploadResponse || isUploading}
+                >
+                  {isUploading ? "업로드 중.." : "신청"}
                 </Button>
 
                 {isModalOpen && (

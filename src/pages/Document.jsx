@@ -1,21 +1,78 @@
 import Header from "../components/Header";
 import styled from "styled-components";
 import DocumentTable from "../components/DocumentTable";
+import { useState, useContext, useEffect } from "react";
+import { UserContext } from "../context/userContext";
+import axios from "axios";
 
 const Document = () => {
-  const requestDataING = [
-    { room: "539호", date: "2025.03.21", message: "승인 대기" },
-    { room: "220호", date: "2025.03.26", message: "승인 대기" },
-    { room: "226호", date: "2025.03.28", message: "승인 대기" },
-    { room: "445호", date: "2025.04.02", message: "승인 대기" },
-  ];
+  const { userData } = useContext(UserContext);
+  console.log("userData: ", userData);
+  //console.log(userData.data.userId);
 
-  const requestDataED = [
-    { room: "539호", date: "2025.03.21", message: "승인" },
-    { room: "220호", date: "2025.03.26", message: "승인" },
-    { room: "226호", date: "2025.03.28", message: "반려" },
-    { room: "445호", date: "2025.04.02", message: "반려" },
-  ];
+  // 상태 관리: 진행중(승인 대기)와 완료된 신청 내역
+  const [pendingData, setPendingData] = useState([]);
+  const [completedData, setCompletedData] = useState([]);
+  const [error, setError] = useState(null); // setError를 정의
+
+  useEffect(() => {
+    // userData가 준비되지 않았으면 실행하지 않음
+    if (!userData) return;
+
+    const userId = userData.userId;
+    console.log("userID:", userId);
+
+    const fetchData = async () => {
+      try {
+        const baseUrl = "https://itsmeweb.store/api/application";
+
+        const [pendingRes, approvedRes, rejectedRes] = await Promise.all([
+          axios.get(baseUrl, {
+            params: { userId, status: "PENDING" },
+            headers: { accept: "application/json" },
+          }),
+          axios.get(baseUrl, {
+            params: { userId, status: "APPROVED" },
+            headers: { accept: "application/json" },
+          }),
+          axios.get(baseUrl, {
+            params: { userId, status: "REJECTED" },
+            headers: { accept: "application/json" },
+          }),
+        ]);
+        console.log("pendingRes", pendingRes);
+        const pendingData = pendingRes.data?.data || [];
+        const approvedData = approvedRes.data?.data || [];
+        const rejectedData = rejectedRes.data?.data || [];
+
+        const pendingMapped = pendingData.map((item) => ({
+          room: item.classroom,
+          date: item.applicationDate,
+          message: "승인 대기",
+        }));
+
+        const approvedMapped = approvedData.map((item) => ({
+          room: item.classroom,
+          date: item.applicationDate,
+          message: "승인",
+        }));
+
+        const rejectedMapped = rejectedData.map((item) => ({
+          room: item.classroom,
+          date: item.applicationDate,
+          message: "반려",
+        }));
+
+        setPendingData(pendingMapped);
+        setCompletedData([...approvedMapped, ...rejectedMapped]);
+      } catch (err) {
+        console.error("신청 내역 데이터를 불러오는데 실패했습니다.", err);
+        setError("데이터를 불러오지 못했습니다.");
+      }
+    };
+
+    fetchData();
+  }, [userData]);
 
   return (
     <>
@@ -26,10 +83,10 @@ const Document = () => {
             신청 내역 문서보관함
           </h2>
           <h3>진행중인 신청내역</h3>
-          <DocumentTable data={requestDataING} />
+          <DocumentTable data={pendingData} />
           <br></br>
           <h3>완료된 신청 내역</h3>
-          <DocumentTable data={requestDataED} />
+          <DocumentTable data={completedData} />
           <br></br>
         </div>
       </PageWrapper>

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import Header from "../components/Header";
 import backgroundImage from "../assets/images/loginBackground.png";
 import loginImage from "../assets/images/loginPle.png";
+import { UserContext } from "../context/userContext";
 
 // 로그인 페이지에서 로그인이 되어 있지 않은 상태에서
 // 다른 페이지들을 들어가면 어떻게 되나요 ex. 강의실 안내 외 alert?
@@ -16,22 +17,19 @@ const Login = () => {
   const navigate = useNavigate();
   const [userId, setUserId] = useState("");
   const [userPassword, setUserPassword] = useState("");
-  const [userRole, setUserRole] = useState("");
   const [message, setMessage] = useState("");
   const [activeButton, setActiveButton] = useState("USER");
 
-  // Login.jsx:64 로그인 오류: AxiosError {message: 'Request failed with status code 500'}
-  const handleLogin = async (e) => {
+  // context에서 로그인 정보 받아오기
+  const { setUserData } = useContext(UserContext);
+
+  const handleLoginDetail = async (e) => {
     e.preventDefault();
 
     try {
-      const response = await axios.post(
-        "https://itsmeweb.store/api/user",
-        {
-          userId,
-          userPassword,
-          userRole: activeButton,
-        },
+      // API 요청: userId와 activeButton(사용자/관리자)을 쿼리 파라미터로 전달
+      const response = await axios.get(
+        `https://itsmeweb.store/api/user?userId=${userId}&userRole=${activeButton}`,
         {
           headers: {
             "Content-Type": "application/json",
@@ -42,23 +40,25 @@ const Login = () => {
       const result = response.data;
 
       if (result.result === "SUCCESS") {
-        const { token, user } = result.data || {};
+        const userDataFromResponse = result.data;
+        // Context에 userData 저장
+        setUserData(userDataFromResponse);
+        setMessage(`${userDataFromResponse.userName}님 환영합니다!`);
 
-        if (token && user) {
-          // 로그인 정보 저장
-          localStorage.setItem("accessToken", token);
-          localStorage.setItem("user", JSON.stringify(user));
-          localStorage.setItem("role", userRole);
+        console.log(userDataFromResponse);
+        // localStorage에 저장장
+        // API 응답에는 토큰이 없으므로 사용자 정보만 저장합니다.
+        localStorage.setItem("user", JSON.stringify(userDataFromResponse));
+        // console.log(localStorage.getItem("user"));
+        localStorage.setItem("role", userDataFromResponse.userRole);
 
-          setMessage(`${user.userName}님 환영합니다!`);
-        } else {
-          setMessage("로그인 성공했지만 사용자 정보가 없습니다.");
-        }
-
+        // 역할에 따라 페이지 이동 (navigate 시 state도 함께 전달 가능)
         if (activeButton === "USER") {
-          navigate("/home");
+          navigate("/home", { state: { userData: userDataFromResponse } });
         } else if (activeButton === "ADMIN") {
-          navigate("/admin/home");
+          navigate("/admin/home", {
+            state: { userData: userDataFromResponse },
+          });
         }
       } else {
         const errorMessage =
@@ -67,11 +67,10 @@ const Login = () => {
       }
     } catch (error) {
       if (error.response?.data?.error) {
-        setMessage(error.response.data.error.message); // 예: "존재하지 않는 아이디입니다."
+        setMessage(error.response.data.error.message);
       } else {
         setMessage("로그인 요청 중 오류가 발생했습니다.");
       }
-
       console.error("로그인 오류:", error);
     }
   };
@@ -109,7 +108,7 @@ const Login = () => {
               관리자 로그인
             </StyledButton>
           </ButtonGroup>
-          <LoginForm onSubmit={handleLogin}>
+          <LoginForm onSubmit={handleLoginDetail}>
             <InputGroup>
               <Input
                 type="text"
