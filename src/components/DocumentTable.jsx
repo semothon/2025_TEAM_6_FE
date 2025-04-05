@@ -1,8 +1,10 @@
 import styled from "styled-components";
-import { use, useState } from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import rightArrow from "../assets/images/rightArrow.png";
 
 const DocumentTable = ({ data }) => {
+  const navigate = useNavigate();
   const [selectedItem, setSelectedItem] = useState(null);
 
   const showInfo = (item) => {
@@ -11,6 +13,13 @@ const DocumentTable = ({ data }) => {
     } else {
       setSelectedItem(item);
     }
+  };
+
+  // 전달받는 data에 pdfUrl이 꼭 있어야 함!!!!
+  const showContent = () => {
+    // api 연결 전 임의로 넣어둔 것
+    const pdfUrl = "https://example.com/sample.pdf";
+    navigate("/applied-content", { state: { pdfUrl } });
   };
 
   return (
@@ -34,7 +43,7 @@ const DocumentTable = ({ data }) => {
                 <Td>{item.date}</Td>
                 <Td>
                   <ButtonContainer>
-                    <Button>
+                    <Button onClick={showContent}>
                       내용 보기
                       <img
                         src={rightArrow}

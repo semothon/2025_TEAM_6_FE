@@ -1,7 +1,7 @@
 import { useNavigate, useLocation } from "react-router-dom";
 import styled from "styled-components";
 import Header from "../components/Header";
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { VscClose } from "react-icons/vsc";
 
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf"; // pdf 읽는 라이브러리 불러오기
@@ -15,107 +15,51 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc; //workerSrc는 실제로 "/a
 
 const AppliedContent = () => {
   const location = useLocation();
-  const fileInputRef = useRef(null);
+  // pdf 첫 페이지를 캔버스로 이미지로 만든 url을 저장함.
+  const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null);
 
-  const [selectedOne, setSelectedOne] = useState([]);
-  const [selectedFiles, setSelectedFiles] = useState(null);
-  const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null); // pdf 첫 페이지를 캔버스로 이미지로 만든 url을 저장함.
-
-  const onSelectFile = (e) => {
-    e.preventDefault();
-
-    if (!e.target.files) return;
-
-    const selectedFiles = e.target.files;
-
-    setSelectedFiles(selectedFiles);
-
-    // 브라우저 상에 보여질 파일 이름 리스트 업데이트
-    const fileArray = Array.from(selectedFiles).map((file) => file.name);
-    setSelectedOne((prev) => [...prev, ...fileArray]);
-
-    // 최신 업로드된 파일이 PDF면 미리보기 렌더링(두 개 이상이면 마지막 파일만)
-    const latestFile = selectedFiles[selectedFiles.length - 1];
-    if (latestFile && latestFile.type === "application/pdf") {
-      const reader = new FileReader();
-
-      reader.onload = async function () {
-        // pdf 첫 페이지 -> canvas로 변환 -> img로 변환
-        const typedarray = new Uint8Array(this.result);
-        const pdf = await pdfjsLib.getDocument({ data: typedarray }).promise;
-
-        const page = await pdf.getPage(1); // 첫 페이지 가져오기
-        const viewport = page.getViewport({ scale: 1.5 }); // 확대 비율 설정
-
-        const canvas = document.createElement("canvas");
-        const context = canvas.getContext("2d");
-        canvas.width = viewport.width;
-        canvas.height = viewport.height;
-
-        await page.render({ canvasContext: context, viewport }).promise;
-
-        const imageUrl = canvas.toDataURL(); // canvas를 이미지로 변환
-        setPdfPreviewUrl(imageUrl); // 상태에 저장
-      };
-
-      reader.readAsArrayBuffer(latestFile);
+  useEffect(() => {
+    const pdfUrl = location.state?.pdfUrl;
+    console.log(pdfUrl);
+    if (pdfUrl) {
+      renderPdfFromUrl(pdfUrl);
     }
-    e.target.value = ""; // 다시 업로드 할 수 있게 초기화
-  };
+  }, [location.state]);
 
-  const attachFile = // 파일 목록 출력
-    selectedOne &&
-    selectedOne.map((file, index) => (
-      <AttFile key={index}>
-        <div>{file}</div>
-        <button
-          onClick={() => {
-            setSelectedOne(selectedOne.filter((e) => e !== file));
-            setPdfPreviewUrl(null); // 삭제 시 미리보기 초기화 (선택)
-          }}
-        >
-          <VscClose size="17" />
-        </button>
-      </AttFile>
-    ));
+  // PDF URL의 첫 페이지를 캔버스로 렌더링해서 이미지로 저장하는 함수
+  const renderPdfFromUrl = async (url) => {
+    try {
+      const loadingTask = pdfjsLib.getDocument(url);
+      const pdf = await loadingTask.promise;
 
-  const handleButtonClick = () => {
-    fileInputRef.current.click();
+      const page = await pdf.getPage(1);
+      const viewport = page.getViewport({ scale: 1.5 });
+
+      const canvas = document.createElement("canvas");
+      const context = canvas.getContext("2d");
+      canvas.width = viewport.width;
+      canvas.height = viewport.height;
+
+      await page.render({ canvasContext: context, viewport }).promise;
+
+      const imageUrl = canvas.toDataURL(); // canvas → 이미지 URL
+      setPdfPreviewUrl(imageUrl);
+    } catch (error) {
+      console.error("PDF 렌더링 실패:", error);
+    }
   };
 
   return (
     <>
-      <Header role="user" />
+      <Header role="USER" />
       <Container>
-        <div>
-          <p>pdf 파일을 미리보기로 띄워볼까나 ㅋ</p>
-          <InfoRow>
-            <Label>첨부파일</Label>
-            <div style={{ display: "flex", flexDirection: "column" }}>
-              {selectedOne.length !== 0 ? (
-                <span>{attachFile}</span>
-              ) : (
-                <NotDownload>파일을 첨부할 수 있습니다.</NotDownload>
-              )}
-              <FileUploadButton onClick={handleButtonClick}>
-                파일 업로드
-              </FileUploadButton>
-              <HiddenInput
-                type="file"
-                ref={fileInputRef}
-                onChange={onSelectFile}
-                accept=".pdf, .doc, .docx"
-              />
-            </div>
-          </InfoRow>
-          {/* PDF 미리보기 영역 */}
-          {pdfPreviewUrl && (
-            <PreviewWrapper>
-              <h4>PDF 미리보기</h4>
-              <PreviewImage src={pdfPreviewUrl} alt="PDF 미리보기" />
-            </PreviewWrapper>
-          )}
-        </div>
+        {/* PDF 미리보기 영역 */}
+        {pdfPreviewUrl && (
+          <PreviewWrapper>
+            <h4>PDF 미리보기</h4>
+            <PreviewImage src={pdfPreviewUrl} alt="PDF 미리보기" />
+          </PreviewWrapper>
+        )}
       </Container>
     </>
   );
