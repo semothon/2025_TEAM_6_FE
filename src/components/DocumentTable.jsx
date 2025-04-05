@@ -1,7 +1,7 @@
-import styled from "styled-components";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import rightArrow from "../assets/images/rightArrow.png";
+import styled from 'styled-components';
+import { use, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import rightArrow from '../assets/images/rightArrow.png';
 
 const DocumentTable = ({ data }) => {
   const navigate = useNavigate();
@@ -18,8 +18,8 @@ const DocumentTable = ({ data }) => {
   // 전달받는 data에 pdfUrl이 꼭 있어야 함!!!!
   const showContent = () => {
     // api 연결 전 임의로 넣어둔 것
-    const pdfUrl = "https://example.com/sample.pdf";
-    navigate("/applied-content", { state: { pdfUrl } });
+    const pdfUrl = 'https://example.com/sample.pdf';
+    navigate('/applied-content', { state: { pdfUrl } });
   };
 
   return (
@@ -28,17 +28,17 @@ const DocumentTable = ({ data }) => {
         <Table>
           <thead>
             <tr>
-              <Th>구분</Th>
+              <Th style={{ textAlign: 'start' }}>구분</Th>
               <Th>신청 강의실</Th>
               <Th>신청 날짜</Th>
               <Th>신청 내용</Th>
-              <Th>상태</Th>
+              <Th style={{ textAlign: 'end', paddingRight: '45px' }}>상태</Th>
             </tr>
           </thead>
           <tbody>
             {data.map((item, index) => (
               <tr key={index}>
-                <Td>대여</Td>
+                <Td style={{ textAlign: 'start' }}>대여</Td>
                 <Td>{item.room}</Td>
                 <Td>{item.date}</Td>
                 <Td>
@@ -48,20 +48,20 @@ const DocumentTable = ({ data }) => {
                       <img
                         src={rightArrow}
                         alt="rightArrow"
-                        style={{ width: "15px", marginRight: "-8px" }}
+                        style={{ width: '15px', marginRight: '-8px' }}
                       />
                     </Button>
                   </ButtonContainer>
                 </Td>
-                <Td>
-                  <ButtonContainer>
-                    {item.message === "승인" ||
-                    item.message === "승인 대기" ||
-                    item.message === "선택" ? (
+                <Td style={{ width: '100px' }}>
+                  <ButtonContainer style={{ justifyContent: 'end' }}>
+                    {item.message === '승인' ||
+                    item.message === '승인 대기' ||
+                    item.message === '선택' ? (
                       <ApprovalButton
                         selected={selectedItem === item}
                         onClick={() =>
-                          item.message === "선택" ? showInfo(item) : null
+                          item.message === '선택' ? showInfo(item) : null
                         }
                       >
                         {item.message}
@@ -112,10 +112,10 @@ const Th = styled.th`
 `;
 
 const Td = styled.td`
-  padding: 12px;
+  padding: 8px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   text-align: center;
-  font-size: 13px;
+  font-size: 15px;
 `;
 
 const ButtonContainer = styled.div`
@@ -140,8 +140,8 @@ const Button = styled.button`
 `;
 
 const ApprovalButton = styled.button`
-  background-color: ${({ selected }) => (selected ? "#263a73" : "white")};
-  color: ${({ selected }) => (selected ? "white" : "#263a73")};
+  background-color: ${({ selected }) => (selected ? '#263a73' : 'white')};
+  color: ${({ selected }) => (selected ? 'white' : '#263a73')};
   padding: 8px 10px;
   border: 1px solid #263a73;
   cursor: pointer;
