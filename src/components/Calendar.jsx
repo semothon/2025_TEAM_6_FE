@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import styled from 'styled-components';
+import React, { useState } from "react";
+import styled from "styled-components";
 // src 폴더 내 파일은 반드시 import 해서 사용해야 함.
-import leftArrow from '../assets/images/left_arrow.png';
-import rightArrow from '../assets/images/right_arrow.png';
+import leftArrow from "../assets/images/left_arrow.png";
+import rightArrow from "../assets/images/right_arrow.png";
 
 const Calendar = ({
   selectedDate,
@@ -128,7 +128,7 @@ const Calendar = ({
             <img
               src={leftArrow}
               alt="왼쪽화살표"
-              style={{ width: '30px', height: '30px' }}
+              style={{ width: "30px", height: "30px" }}
             />
           </NextButton>
         </NextContainer>
@@ -136,20 +136,20 @@ const Calendar = ({
           {year}년 {month + 1}월
         </h2>
         <NextContainer>
-          {' '}
-          <NextButton onClick={handlePrevMonth}>
+          {" "}
+          <NextButton onClick={handleNextMonth}>
             <img
               src={rightArrow}
-              alt="오른쪽쪽화살표"
-              style={{ width: '30px', height: '30px' }}
+              alt="오른쪽화살표"
+              style={{ width: "30px", height: "30px" }}
             />
           </NextButton>
         </NextContainer>
       </Header>
       <Grid>
-        {' '}
-        {['일', '월', '화', '수', '목', '금', '토'].map((day) => (
-          <Day key={day} style={{ fontWeight: 'bold' }}>
+        {" "}
+        {["일", "월", "화", "수", "목", "금", "토"].map((day) => (
+          <Day key={day} style={{ fontWeight: "bold" }}>
             {day}
           </Day>
         ))}
@@ -164,17 +164,13 @@ const Calendar = ({
               color:
                 selectedDate &&
                 selectedDate.toDateString() === date.toDateString()
-                  ? '#fff'
+                  ? "#fff"
                   : date.getMonth() === month
-                  ? 'black'
-                  : '#BFBFBF',
-              backgroundColor:
-                //   selectedDate &&
-                //   selectedDate.toDateString() === date.toDateString()
-                //     ? '#263A73'
-                'transparent',
-              cursor: 'pointer',
-              borderRadius: '10px',
+                  ? "black"
+                  : "#BFBFBF",
+              backgroundColor: "transparent",
+              cursor: "pointer",
+              borderRadius: "10px",
             }}
           >
             <DayNumber
@@ -182,8 +178,8 @@ const Calendar = ({
                 backgroundColor:
                   selectedDate &&
                   selectedDate.toDateString() === date.toDateString()
-                    ? '#263a73' // 선택된 날짜면 DayNumber의 배경을 회색으로
-                    : 'transparent',
+                    ? "#263a73" // 선택된 날짜면 DayNumber의 배경을 회색으로
+                    : "transparent",
               }}
             >
               {date.getDate()}
@@ -255,10 +251,6 @@ const NextContainer = styled.div`
   height: 20%;
   border: none;
   background-color: #fff;
-  // margin-left: 20px;
-  // margin-right: 20px;
-  // margin-top: 10px;
-  // margin-bottom: 10px;
   margin: 0px 20px; // 위, 아래는 10px, 좌,우 는 20px
 `;
 
@@ -347,7 +339,7 @@ const TimeSlot = styled.div`
   width: 100%;
   height: 60px;
   cursor: pointer;
-  background-color: ${(props) => (props.selected ? '#263A73' : '#F6F7F8')};
+  background-color: ${(props) => (props.selected ? "#263A73" : "#F6F7F8")};
   border-radius: 5px;
   transition: background-color 0.3s;
   &:hover {
