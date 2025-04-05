@@ -1,14 +1,22 @@
-import { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import Header from '../components/Header';
-import pleImage from '../assets/images/maxple.png';
-import styled from 'styled-components';
-import Calendar from '../components/Calendar';
+import { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import Header from "../components/Header";
+import pleImage from "../assets/images/maxple.png";
+import styled from "styled-components";
+import Calendar from "../components/Calendar";
 
 const ClassroomDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { collegeName, classroomInfo } = location.state || {};
+  // collegeName: selectedCollegeObj.name,
+  // classroomInfo: {
+  //   id: room.classroomId,
+  //   image: room.classroomImage,
+  //   number: room.classroomNumber,
+  //   capacity: room.classroomCapacity,
+  // },
+  // console.log("classroomId", classroomInfo.id);
 
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedTimeRange, setSelectedTimeRange] = useState({
@@ -22,7 +30,7 @@ const ClassroomDetail = () => {
       selectedTimeRange.start !== null &&
       selectedTimeRange.end !== null
     ) {
-      navigate('/reservation', {
+      navigate("/reservation", {
         state: {
           date: selectedDate.toDateString(),
           startTime: selectedTimeRange.start,
@@ -32,7 +40,7 @@ const ClassroomDetail = () => {
         },
       });
     } else {
-      alert('날짜와 시간을 선택해주세요.');
+      alert("날짜와 시간을 선택해주세요.");
     }
   };
 
@@ -49,36 +57,36 @@ const ClassroomDetail = () => {
             src={classroomInfo.image}
             alt={`${classroomInfo.number}호`}
             style={{
-              marginLeft: '0px',
-              marginRight: '0px',
-              width: '550px',
-              height: '300px',
-              borderRadius: '8px',
-              marginTop: '50px',
-              objectFit: 'cover',
+              marginLeft: "0px",
+              marginRight: "0px",
+              width: "550px",
+              height: "300px",
+              borderRadius: "8px",
+              marginTop: "50px",
+              objectFit: "cover",
             }}
           />
-          <div style={{ display: 'flex', alignItems: 'baseline' }}>
+          <div style={{ display: "flex", alignItems: "baseline" }}>
             <h2>
               {classroomInfo.number}호 | {collegeName}
             </h2>
             <img
               src={pleImage}
               alt="인원"
-              style={{ width: '15px', marginLeft: '10px' }}
+              style={{ width: "15px", marginLeft: "10px" }}
             />
-            <p style={{ fontSize: '12px', marginLeft: '5px' }}>
+            <p style={{ fontSize: "12px", marginLeft: "5px" }}>
               정원 최대 {classroomInfo.capacity}명
             </p>
           </div>
 
           <div>
             <h2
-              style={{ padding: '0px', marginTop: '2px', marginBottom: '5px' }}
+              style={{ padding: "0px", marginTop: "2px", marginBottom: "5px" }}
             >
               유의사항
             </h2>
-            <div style={{ fontSize: '12px', color: '#626262' }}>
+            <div style={{ fontSize: "12px", color: "#626262" }}>
               <li>사용 후 반드시 정리정돈 (의자, 책상, 컴퓨터)</li>
               <li>
                 현수막 부착 시에 사용되는 양면테이프, 끈끈이, 풀 등 강의실이
@@ -97,10 +105,11 @@ const ClassroomDetail = () => {
             setSelectedDate={setSelectedDate}
             selectedTimeRange={selectedTimeRange}
             setSelectedTimeRange={setSelectedTimeRange}
-          />{' '}
+            classroomId={classroomInfo.id}
+          />{" "}
           <Buttons>
             {/* USER인지 ADMIN인지 내용 받기 -> 그거에 따라 목록 이동하는게 다름*/}
-            <ListButton onClick={() => navigate('/home')}>목록</ListButton>
+            <ListButton onClick={() => navigate("/home")}>목록</ListButton>
             <ApplyButton onClick={handleReservation}>대여 신청</ApplyButton>
           </Buttons>
         </Rightside>

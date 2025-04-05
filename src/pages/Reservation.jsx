@@ -118,14 +118,16 @@ const Reservation = () => {
       applicationEnd: formattedEndTime,
       // uploadResponse의 필드를 참조하여 payload에 적용
       applicationPurpose: uploadResponse
-        ? uploadResponse.data.applicationPurspose
+        ? uploadResponse.data.applicationPurpose
         : "",
       applicationParticipants: uploadResponse
-        ? uploadResponse.data.applicationParticipants
+        ? uploadResponse.data.applicationParticipant
         : "", // 참여 인원
       applicationUrl: uploadResponse ? uploadResponse.data.applicationUrl : "", // 업로드된 파일의 URL (없으면 빈 문자열)
     };
-    console.log("applicationStart", payload.applicationStart);
+
+    console.log("uploadResponse", uploadResponse.data.applicationParticipant);
+    console.log("payload", payload.applicationParticipants);
 
     try {
       const response = await axios.post(

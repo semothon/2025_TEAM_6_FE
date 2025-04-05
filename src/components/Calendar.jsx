@@ -1,16 +1,22 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 // src 폴더 내 파일은 반드시 import 해서 사용해야 함.
 import leftArrow from "../assets/images/left_arrow.png";
 import rightArrow from "../assets/images/right_arrow.png";
+import { useLocation } from "react-router-dom";
+import axios from "axios";
 
 const Calendar = ({
   selectedDate,
   setSelectedDate,
   selectedTimeRange,
   setSelectedTimeRange,
+  classroomId,
 }) => {
+  const location = useLocation();
   const [currentDate, setCurrentDate] = useState(new Date());
+  // 해당 달에 예약된 날들
+  const [reservedDays, setReservedDays] = useState([]);
 
   const year = currentDate.getFullYear();
   const month = currentDate.getMonth();
@@ -23,6 +29,38 @@ const Calendar = ({
   const endDay = new Date(lastDayOfMonth);
   endDay.setDate(lastDayOfMonth.getDate() + (6 - lastDayOfMonth.getDay()));
 
+  // 해당 달에 예약된 날들 api에서 정보 받아오기
+  useEffect(() => {
+    const fetchReservedDays = async () => {
+      try {
+        const baseUrl = "https://itsmeweb.store";
+        const response = await axios.get(
+          `${baseUrl}/api/classrooms/${classroomId}/reserved-days`,
+          {
+            params: {
+              year: currentDate.getFullYear(),
+              month: currentDate.getMonth() + 1,
+            },
+          }
+        );
+
+        console.log("📦 API Response:", response); // 전체 응답 객체
+        console.log("📅 Reserved Days:", response.data.data); // 실제 예약 날짜들
+
+        if (response.data.result === "SUCCESS") {
+          setReservedDays(response.data.data); // ["2025-04-05", ...]
+        } else {
+          console.error("예약된 날짜 가져오기 실패:", response.data.error);
+        }
+      } catch (err) {
+        console.error("예약된 날짜 요청 중 에러 발생", err);
+      }
+    };
+
+    fetchReservedDays();
+  }, [classroomId, currentDate]);
+
+  // 달력 내용
   const groupDatesByWeek = (startDay, endDay) => {
     const weeks = [];
     let currentWeek = [];
@@ -156,37 +194,42 @@ const Calendar = ({
       </Grid>
       <Divider />
       <Grid>
-        {weeks.flat().map((date, index) => (
-          <DayNumberContainer
-            key={index}
-            onClick={() => handleDateClick(date)}
-            style={{
-              color:
-                selectedDate &&
-                selectedDate.toDateString() === date.toDateString()
-                  ? "#fff"
-                  : date.getMonth() === month
-                  ? "black"
-                  : "#BFBFBF",
-              backgroundColor: "transparent",
-              cursor: "pointer",
-              borderRadius: "10px",
-            }}
-          >
-            <DayNumber
+        {weeks.flat().map((date, index) => {
+          const y = date.getFullYear();
+          const m = String(date.getMonth() + 1).padStart(2, "0");
+          const d = String(date.getDate()).padStart(2, "0");
+          const localDateStr = `${y}-${m}-${d}`;
+
+          const isReserved = reservedDays.includes(localDateStr);
+
+          const isCurrentMonth = date.getMonth() === month;
+          const isSelected =
+            selectedDate && selectedDate.toDateString() === date.toDateString();
+
+          return (
+            <DayNumberContainer
+              key={index}
+              onClick={() => {
+                if (!isReserved && isCurrentMonth) handleDateClick(date);
+              }}
               style={{
-                backgroundColor:
-                  selectedDate &&
-                  selectedDate.toDateString() === date.toDateString()
-                    ? "#263a73" // 선택된 날짜면 DayNumber의 배경을 회색으로
-                    : "transparent",
+                cursor: isReserved ? "default" : "pointer",
               }}
             >
-              {date.getDate()}
-            </DayNumber>
-          </DayNumberContainer>
-        ))}
+              <DayNumber
+                className={`
+                  ${isSelected ? "selected" : ""}
+                  ${isReserved ? "reserved" : ""}
+                  ${!isCurrentMonth ? "other-month" : ""}
+                `}
+              >
+                {date.getDate()}
+              </DayNumber>
+            </DayNumberContainer>
+          );
+        })}
       </Grid>
+
       {selectedDate && (
         // 여기부터 timeline 부분
         <TimeSelection>
@@ -290,17 +333,31 @@ const DayNumberContainer = styled.div`
   }
 `;
 const DayNumber = styled.div`
-  margin: auto auto; // 좌우 자동 마진
-  width: 22px;
-  height: 22px;
-  padding: 1px;
-  // background-color: #263a73;
-  justify-content: center; /* 가로 정렬 */
+  margin: auto;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-  text-align: center;
-  border: none;
-  border-radius: 5px;
-  // transition: background-color 0.3s, color 0.3s;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: background-color 0.3s, color 0.3s;
+  color: #000; // 기본 색
+
+  &.selected {
+    background-color: #263a73;
+    color: #fff;
+  }
+
+  &.reserved {
+    background-color: #e3e7f4;
+    color: #000000;
+  }
+
+  &.other-month {
+    color: #bfbfbf; // 연한 회색
+  }
 `;
 
 const TimeSelection = styled.div`

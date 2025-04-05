@@ -45,7 +45,7 @@ const CollegeList = () => {
         const res = await axios.get(
           `https://itsmeweb.store/api/classroom?classroomBuilding=${college.value}`
         );
-        console.log(res.data);
+        console.log("res.data", res.data);
         if (res.data.result === "SUCCESS") {
           setClassroomList(res.data.data.roomPreviewInfos);
         } else {
@@ -61,8 +61,10 @@ const CollegeList = () => {
     }
   };
 
+  console.log("classroomList", classroomList);
+
   return (
-    // 헤더 제외 높이를 최대 높이라 간주주
+    // 헤더 제외 높이를 최대 높이라 간주
     <div style={{ display: "flex", height: "calc(100vh - 200px)" }}>
       {/* Sidebar */}
       <Sidebar>
