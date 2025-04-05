@@ -8,36 +8,18 @@ import axios from "axios";
 import Modal from "../components/Modal";
 import RejectModal from "../components/RejectModal";
 
-// import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf"; // pdf 읽는 라이브러리 불러오기
-// import workerSrc from "pdfjs-dist/legacy/build/pdf.worker.min.js?url"; // 버전 이슈로 Web Worker을 사용
-// //PDF 작업용 워커 파일의 경로를 URL 형태로 가져오는 코드
-// pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc; //workerSrc는 실제로 "/assets/pdf.worker.min.js" 이런 값이 됨.
-
-// <pdf 미리보기 구현 과정>
-// pdf.js는 단순 html처럼 바로 렌더링 할 수가 없어서 worker를 통해 백그라운드에서 pdf 데이터를 해석한 뒤,
-// 그걸 화면에 canvas로 그려야 된다 함.
-
-// item의 형태
-// applicationId: item.applicaitonId,
-// applicationDate: item.applicationDate,
-// classroom: item.classroom,
-// semester: item.semester,
-// status: "승인",
-
 const AppliedContent = () => {
   const location = useLocation();
   const { userData } = useContext(UserContext);
 
   const item = location.state?.item;
   const applicationId = item.applicationId;
-  const reportId = item.reportId;
   console.log("item", item);
   console.log("applicationId", applicationId);
-  const [applicationDetail, setApplicationDetail] = useState(null); // 신청 상세 정보 상태 추가
+  const [applicationDetail, setApplicationDetail] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  // const [isRejectModalOpen, setIsRejectModalOpen] = useStat
 
-  // 현재 role 확인
+  // 현재 사용자 role
   const userRole = userData.userRole;
 
   useEffect(() => {
@@ -46,13 +28,13 @@ const AppliedContent = () => {
     }
   }, [applicationId]);
 
-  // 신청 상세 정보 요청
+  // 신청 상세 정보 요청 함수
   const fetchApplicationDetail = async () => {
     try {
       const response = await axios.get(
         "https://itsmeweb.store/api/application/detail",
         {
-          params: { applicationId }, // 이건 바깥의 applicationId를 그대로 사용
+          params: { applicationId },
           headers: { accept: "application/json" },
         }
       );
@@ -71,18 +53,21 @@ const AppliedContent = () => {
 
   console.log("applicationDetail", applicationDetail);
 
-  const handleAdminApproval = async (reportId) => {
+  // 승인 처리 함수
+  const handleAdminApproval = async () => {
+    console.log("Approval button clicked");
     try {
       const response = await axios.post(
-        `https://itsmeweb.store/api/application/approve?reportId=${reportId}`,
+        `https://itsmeweb.store/api/application/approve?applicationId=${applicationId}`,
         {},
         {
           headers: { accept: "application/json" },
         }
       );
+      console.log("Approval response:", response.data);
 
       if (response.data.result === "SUCCESS") {
-        setIsModalOpen(true); // 모달을 열어줌
+        setIsModalOpen(true); // 승인 후 모달 오픈
         fetchApplicationDetail(); // 데이터 갱신
       } else {
         alert(`처리 중 오류가 발생했습니다: ${response.data.error}`);
@@ -94,7 +79,14 @@ const AppliedContent = () => {
 
   return (
     <>
-      <Header role="USER" />
+      <Header role={userRole} />
+      {isModalOpen && (
+        <Modal
+          title="승인 완료"
+          message="신청이 승인되었습니다."
+          onClose={() => setIsModalOpen(false)}
+        />
+      )}
       <Container>
         {/* 이미지 미리보기 */}
         <PreviewWrapper>
@@ -160,17 +152,10 @@ const AppliedContent = () => {
               </InfoRow>
               {userRole === "ADMIN" && applicationDetail && (
                 <ButtonContainer>
-                  <Button
-                    primary
-                    onClick={() =>
-                      handleAdminApproval(applicationDetail.reportId)
-                    }
-                  >
+                  <Button primary onClick={handleAdminApproval}>
                     승인
                   </Button>
-                  <Button onClick={() => handleAdminApproval("REJECTED")}>
-                    반려
-                  </Button>
+                  <Button>반려</Button>
                 </ButtonContainer>
               )}
               {applicationDetail.applicationRejectReason && (
@@ -193,8 +178,8 @@ const PageWrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh; /* 뷰포트 전체 높이를 차지 */
-  width: 100vw; /* 뷰포트 전체 너비를 차지 */
+  height: 100vh;
+  width: 100vw;
 `;
 
 const Container = styled.div`
@@ -220,7 +205,7 @@ const InfoContainer = styled.div`
 const InfoRow = styled.div`
   display: flex;
   justify-content: left;
-  align-items: center; /* 추가 */
+  align-items: center;
   padding: 10px;
   border-bottom: 1px solid #ddd;
   color: #3e3e3e;
@@ -229,7 +214,7 @@ const InfoRow = styled.div`
 const DoubleInfoRow = styled.div`
   display: flex;
   justify-content: space-between;
-  align-items: center; /* 추가 */
+  align-items: center;
   gap: 20px;
   padding: 10px;
   border-bottom: 1px solid #ddd;
@@ -238,7 +223,7 @@ const DoubleInfoRow = styled.div`
 const InfoBlock = styled.div`
   display: flex;
   justify-content: left;
-  align-items: center; /* 추가 */
+  align-items: center;
   width: 50%;
 `;
 
@@ -307,7 +292,6 @@ const PreviewWrapper = styled.div`
 `;
 
 const PreviewImage = styled.img`
-  // pdf 미리보기 감싸는 애
   max-width: 100%;
   border: 1px solid #ccc;
   border-radius: 4px;

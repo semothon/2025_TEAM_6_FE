@@ -70,7 +70,7 @@ const Document = () => {
 
   return (
     <>
-      <Header role="USER" />
+      <Header role={userRole} />
       <PageWrapper>
         <div>
           <h2 style={{ display: "flex", justifyContent: "center" }}>
