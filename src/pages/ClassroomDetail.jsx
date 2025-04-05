@@ -49,8 +49,6 @@ const ClassroomDetail = () => {
             src={classroomInfo.image}
             alt={`${classroomInfo.number}호`}
             style={{
-              marginLeft: '0px',
-              marginRight: '0px',
               width: '550px',
               height: '300px',
               borderRadius: '8px',
