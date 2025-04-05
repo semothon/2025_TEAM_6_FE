@@ -53,7 +53,7 @@ const Header = ({ role }) => {
     <>
       <MainFrame>
         <div
-          style={{ display: "flex", alignItems: "center" }}
+          style={{ display: "flex", alignItems: "center", cursor: "pointer" }}
           onClick={() => navigate("/home")}
         >
           <img

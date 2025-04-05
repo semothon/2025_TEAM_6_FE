@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import styled from 'styled-components';
 import axios from 'axios';
@@ -30,6 +30,7 @@ const CollegeList = () => {
   const [selectedCollege, setSelectedCollege] = useState(null);
   const [date, setDate] = useState('');
   const [startTime, setStartTime] = useState('');
+  const [endTime, setEndTime] = useState('');
   // 선택가능한 시간대 리스트 생성(30분 간격)
   const includedTimes = [18, 18.5, 19, 19.5, 20, 20.5, 21, 21.5, 22].map(
     (t) => {
@@ -38,29 +39,86 @@ const CollegeList = () => {
       return date;
     }
   );
-  const [endTime, setEndTime] = useState('');
   // const [filteredRooms, setFilteredRooms] = useState(classrooms);
   const [classroomList, setClassroomList] = useState([]);
+  // 검색 여부 상태
+  const [isSearching, setIsSearching] = useState(false);
 
-  const handleSearch = () => {
-    // 여기서 특정 시간에 대한 필터링 로직을 추가할 수 있음
-    console.log(`검색 날짜: ${date}, 시작: ${startTime}, 종료: ${endTime}`);
+  useEffect(() => {
+    if (defaultCollege) {
+      handleCollegeClick(defaultCollege);
+    }
+  }, []);
+
+  const handleSearch = async () => {
+    if (!date || !startTime || !endTime) {
+      alert('날짜와 시간을 모두 선택해주세요.');
+      return;
+    }
+
+    // 날짜 형식: YYYY-MM-DD
+    const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
+      .toString()
+      .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+
+    // 시간 형식: HH:mm:ss
+    const formatTime = (time) => {
+      const hour = time.getHours().toString().padStart(2, '0');
+      const minute = time.getMinutes().toString().padStart(2, '0');
+      return `${hour}:${minute}:00`;
+    };
+
+    const formattedStartTime = formatTime(startTime);
+    const formattedEndTime = formatTime(endTime);
+
+    try {
+      const response = await axios.get(
+        'https://itsmeweb.store/api/classroom/available',
+        {
+          params: {
+            date: formattedDate,
+            startTime: formattedStartTime,
+            endTime: formattedEndTime,
+          },
+          headers: {
+            accept: 'application/json',
+          },
+        }
+      );
+
+      if (response.data.roomPreviewInfos) {
+        setClassroomList(response.data.roomPreviewInfos);
+        setIsSearching(true);
+      } else {
+        setClassroomList([]);
+        setIsSearching(true);
+      }
+    } catch (err) {
+      console.error('예약 가능 강의실 조회 실패:', err);
+      setClassroomList([]);
+      setIsSearching(true);
+    }
   };
 
-  /* id기반으로 된 단과대 이름을 표시하기 위함함 */
+  /* id기반으로 된 단과대 이름을 표시하기 위함 */
   const selectedCollegeObj = colleges.find(
     (college) => college.id === selectedCollege
   );
 
   const handleCollegeClick = async (college) => {
     setSelectedCollege(college.id);
+    setIsSearching(false);
+
+    // 👉 입력값 초기화
+    setDate(null);
+    setStartTime(null);
+    setEndTime(null);
 
     if (college.value) {
       try {
         const res = await axios.get(
           `https://itsmeweb.store/api/classroom?classroomBuilding=${college.value}`
         );
-        console.log(res.data);
         if (res.data.result === 'SUCCESS') {
           setClassroomList(res.data.data.roomPreviewInfos);
         } else {
@@ -76,8 +134,10 @@ const CollegeList = () => {
     }
   };
 
+  // console.log("classroomList", classroomList);
+
   return (
-    // 헤더 제외 높이를 최대 높이라 간주주
+    // 헤더 제외 높이를 최대 높이라 간주
     <div style={{ display: 'flex', height: 'calc(100vh - 200px)' }}>
       {/* Sidebar */}
       <Sidebar>
@@ -86,7 +146,7 @@ const CollegeList = () => {
         {colleges.map((college) => (
           <CollegeButton
             key={college.id}
-            active={selectedCollege === college.id}
+            $active={selectedCollege === college.id}
             onClick={() => {
               handleCollegeClick(college);
             }}
@@ -141,7 +201,7 @@ const CollegeList = () => {
             </Container>
             <SearchButton onClick={handleSearch}>검색하기</SearchButton>
           </FilterContainer>
-          {selectedCollege && classroomList.length > 0 ? (
+          {classroomList.length > 0 ? (
             <>
               <ClassroomGrid>
                 {classroomList.map((room) => (
@@ -150,7 +210,7 @@ const CollegeList = () => {
                     onClick={() => {
                       navigate(`/home/${selectedCollege}/${room.classroomId}`, {
                         state: {
-                          collegeName: selectedCollegeObj.name,
+                          collegeName: selectedCollegeObj?.name || '검색결과',
                           classroomInfo: {
                             id: room.classroomId,
                             image: room.classroomImage,
@@ -178,7 +238,10 @@ const CollegeList = () => {
                         marginBottom: '-8px',
                       }}
                     >
-                      {room.classroomNumber}호 | {selectedCollegeObj?.name}
+                      {room.classroomNumber}호{' '}
+                      {selectedCollegeObj?.name
+                        ? `| ${selectedCollegeObj.name}`
+                        : ''}
                     </p>
                     <div
                       style={{
@@ -206,7 +269,11 @@ const CollegeList = () => {
               </ClassroomGrid>
             </>
           ) : (
-            <p style={{ color: '#6b7280' }}> 단과대를 선택해주세요 </p>
+            <p style={{ color: '#6b7280' }}>
+              {isSearching
+                ? '조건에 맞는 강의실이 없습니다.'
+                : '단과대를 선택해주세요.'}
+            </p>
           )}
         </Content>
       </Wrapper>
@@ -239,13 +306,13 @@ const CollegeButton = styled.button`
   padding: 15px 16px 15px 30px; // 왼쪽 여백만 늘려서 텍스트 들여쓰기
   margin-bottom: 8px;
   border: none;
-  background: ${(props) => (props.active ? '#EFF2F6' : '#fff')};
-  color: ${(props) => (props.active ? '#263A73' : '#868686')};
+  background: ${(props) => (props.$active ? '#EFF2F6' : '#fff')};
+  color: ${(props) => (props.$active ? '#263A73' : '#868686')};
   font-size: 18px;
-  font-weight: ${(props) => (props.active ? 'bold' : 'normal')};
+  font-weight: ${(props) => (props.$active ? 'bold' : 'normal')};
   cursor: pointer;
   border-right: ${(props) =>
-    props.active ? '4px solid #263A73' : '4px solid transparent'};
+    props.$active ? '4px solid #263A73' : '4px solid transparent'};
   border-radius: 0;
   transition: 0.3s;
 
