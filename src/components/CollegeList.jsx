@@ -6,8 +6,10 @@ import pleImage from '../assets/images/maxple.png';
 import dateIcon from '../assets/images/date_icon.png';
 import starttimeIcon from '../assets/images/starttime_icon.png';
 
+// 날짜, 시작시간, 끝시간 라이브러리
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css';
+import { createGlobalStyle } from 'styled-components';
 
 const colleges = [
   { id: 1, name: '공과대학관' },
@@ -28,6 +30,14 @@ const CollegeList = () => {
   const [selectedCollege, setSelectedCollege] = useState(null);
   const [date, setDate] = useState('');
   const [startTime, setStartTime] = useState('');
+  // 선택가능한 시간대 리스트 생성(30분 간격)
+  const includedTimes = [18, 18.5, 19, 19.5, 20, 20.5, 21, 21.5, 22].map(
+    (t) => {
+      const date = new Date();
+      date.setHours(Math.floor(t), (t % 1) * 60, 0, 0);
+      return date;
+    }
+  );
   const [endTime, setEndTime] = useState('');
   // const [filteredRooms, setFilteredRooms] = useState(classrooms);
   const [classroomList, setClassroomList] = useState([]);
@@ -91,23 +101,30 @@ const CollegeList = () => {
         <Content>
           <FilterContainer>
             <Container>
+              <DatePickerFix /> {/* 전역 스타일 삽입 */}
               <Picker
                 selected={date}
                 onChange={setDate}
                 dateFormat="yyyy-MM-dd"
                 placeholderText="날짜"
+                popperPlacement="bottom-start" // 왼쪽 정렬로 설정
               />
               <TimePicker
                 selected={startTime}
                 onChange={setStartTime}
                 showTimeSelect
                 showTimeSelectOnly
-                timeIntervals={30}
-                timeCaption="시작"
+                // timeIntervals={30}
+                timeCaption=""
                 dateFormat="HH:mm"
                 placeholderText="시작 시간"
-                minTime={new Date().setHours(18, 0)}
-                maxTime={new Date().setHours(22, 0)}
+                popperPlacement="bottom-start" // 왼쪽 정렬로 설정
+                scrollToTime={(() => {
+                  const d = new Date();
+                  d.setHours(19, 0, 0, 0);
+                  return d;
+                })()}
+                includeTimes={includedTimes} // 선택가능한 시간대 조정
               />
               <TimePicker
                 selected={endTime}
@@ -115,9 +132,11 @@ const CollegeList = () => {
                 showTimeSelect
                 showTimeSelectOnly
                 timeIntervals={30}
-                timeCaption="종료"
+                timeCaption=""
                 dateFormat="HH:mm"
                 placeholderText="종료 시간"
+                popperPlacement="bottom-start" // 왼쪽 정렬로 설정
+                includeTimes={includedTimes} // 선택가능한 시간대 조정
               />
             </Container>
             <SearchButton onClick={handleSearch}>검색하기</SearchButton>
@@ -163,9 +182,10 @@ const CollegeList = () => {
                     </p>
                     <div
                       style={{
+                        paddingTop: '6px',
                         display: 'flex',
                         alignItems: 'baseline',
-                        height: '30px',
+                        height: '26px',
                       }}
                     >
                       <img
@@ -262,6 +282,7 @@ const Container = styled.div`
   border-radius: 6px;
   padding-right: 0px;
 `;
+
 // 달력 헤더 만드는데 쓰는 style - DatePicker 라이브러리
 const Picker = styled(DatePicker)`
   flex: 1; // 너비를 자동으로 분배
@@ -278,6 +299,11 @@ const Picker = styled(DatePicker)`
   cursor: pointer;
   &:hover {
     filter: brightness(0.98);
+  }
+  &:focus,
+  &:active {
+    outline: none;
+    box-shadow: none;
   }
 `;
 
@@ -296,6 +322,17 @@ const TimePicker = styled(DatePicker)`
   cursor: pointer;
   &:hover {
     filter: brightness(0.98);
+  }
+  &:focus,
+  &:active {
+    outline: none;
+    box-shadow: none;
+  }
+`;
+// 화살표 위치 변경
+export const DatePickerFix = createGlobalStyle`
+  .react-datepicker__triangle {
+    left: 32px !important;
   }
 `;
 
