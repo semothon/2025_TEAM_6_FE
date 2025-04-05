@@ -8,6 +8,7 @@ import axios from 'axios';
 const DocumentReport = () => {
   // userId를 위해 Context로 로그인 내용 받아오기
   const { userData } = useContext(UserContext);
+  const userRole = userData.userRole;
 
   // 상태 관리: 진행중(승인 대기)와 완료된 결과보고서 내역
   const [pendingReport, setPendingReport] = useState([]);
@@ -87,7 +88,7 @@ const DocumentReport = () => {
 
   return (
     <>
-      <Header role="USER" />
+      <Header role={userRole} />
       <PageWrapper>
         <div>
           <h2 style={{ display: 'flex', justifyContent: 'center' }}>
