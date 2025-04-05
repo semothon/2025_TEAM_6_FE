@@ -131,7 +131,7 @@ const EntireWrapper = styled.div`
 
 const Leftside = styled.div`
   padding: 34px;
-  margin-left: 100px;
+  margin-left: 200px;
   margin-top: 25px;
 `;
 

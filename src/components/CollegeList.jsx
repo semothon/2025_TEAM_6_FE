@@ -293,7 +293,7 @@ const Sidebar = styled.div`
   width: 250px;
   background: #fff;
   padding: 16px 0 16px 0; // 좌우 padding 제거
-  height: 100vh;
+  height: 120vh;
   overflow-y: auto;
   box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
 `;
