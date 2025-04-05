@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
+// src 폴더 내 파일은 반드시 import 해서 사용해야 함.
+import leftArrow from '../assets/images/left_arrow.png';
+import rightArrow from '../assets/images/right_arrow.png';
 
 const Calendar = ({
   selectedDate,
@@ -119,20 +122,42 @@ const Calendar = ({
   return (
     <CalendarContainer>
       <Header>
-        <NextButton onClick={handlePrevMonth}>◀</NextButton>
-        <h3>
+        {/* < 같은 특수문자를 직접 쓰면 html 태그로 오해해서 오류남. -> html 엔티티로 쓰기 */}
+        <NextContainer>
+          <NextButton onClick={handlePrevMonth}>
+            <img
+              src={leftArrow}
+              alt="왼쪽화살표"
+              style={{ width: '30px', height: '30px' }}
+            />
+          </NextButton>
+        </NextContainer>
+        <h2>
           {year}년 {month + 1}월
-        </h3>
-        <NextButton onClick={handleNextMonth}>▶</NextButton>
+        </h2>
+        <NextContainer>
+          {' '}
+          <NextButton onClick={handlePrevMonth}>
+            <img
+              src={rightArrow}
+              alt="오른쪽쪽화살표"
+              style={{ width: '30px', height: '30px' }}
+            />
+          </NextButton>
+        </NextContainer>
       </Header>
       <Grid>
+        {' '}
         {['일', '월', '화', '수', '목', '금', '토'].map((day) => (
           <Day key={day} style={{ fontWeight: 'bold' }}>
             {day}
           </Day>
         ))}
+      </Grid>
+      <Divider />
+      <Grid>
         {weeks.flat().map((date, index) => (
-          <Day
+          <DayNumberContainer
             key={index}
             onClick={() => handleDateClick(date)}
             style={{
@@ -144,16 +169,26 @@ const Calendar = ({
                   ? 'black'
                   : '#BFBFBF',
               backgroundColor:
-                selectedDate &&
-                selectedDate.toDateString() === date.toDateString()
-                  ? '#4F4F4F'
-                  : 'transparent',
+                //   selectedDate &&
+                //   selectedDate.toDateString() === date.toDateString()
+                //     ? '#263A73'
+                'transparent',
               cursor: 'pointer',
               borderRadius: '10px',
             }}
           >
-            {date.getDate()}
-          </Day>
+            <DayNumber
+              style={{
+                backgroundColor:
+                  selectedDate &&
+                  selectedDate.toDateString() === date.toDateString()
+                    ? '#263a73' // 선택된 날짜면 DayNumber의 배경을 회색으로
+                    : 'transparent',
+              }}
+            >
+              {date.getDate()}
+            </DayNumber>
+          </DayNumberContainer>
         ))}
       </Grid>
       {selectedDate && (
@@ -191,7 +226,9 @@ const Calendar = ({
 export default Calendar;
 
 const CalendarContainer = styled.div`
-  width: 650px;
+  padding: 10px;
+  width: 550px;
+
   text-align: center;
 `;
 
@@ -202,29 +239,76 @@ const Header = styled.div`
   margin-top: 10px;
   margin-bottom: 10px;
 `;
-
+const Divider = styled.div`
+  // 가로줄
+  height: 1px;
+  background-color: #ddd;
+  margin: 0 10px;
+`;
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(7, 1fr);
   gap: 5px;
+`;
+const NextContainer = styled.div`
+  width: 20%;
+  height: 20%;
+  border: none;
+  background-color: #fff;
+  // margin-left: 20px;
+  // margin-right: 20px;
+  // margin-top: 10px;
+  // margin-bottom: 10px;
+  margin: 0px 20px; // 위, 아래는 10px, 좌,우 는 20px
 `;
 
 const NextButton = styled.button`
   border: none;
   cursor: pointer;
   background-color: #fff;
-  margin-left: 20px;
-  margin-right: 20px;
+  &:hover {
+    filter: brightness(90%); // hover 시에 색 좀 어둡게
+  }
+  &:focus,
+  &:active {
+    outline: none;
+    box-shadow: none;
+  }
 `;
 
 const Day = styled.div`
+  height: 20px;
+
+  color: #7e7e7e;
   padding: 10px;
   text-align: center;
   border: none;
   transition: background-color 0.3s, color 0.3s;
+`;
+
+const DayNumberContainer = styled.div`
+  padding: 5px;
+  // text-align: center;
+  justify-content: center; /* 가로 정렬 */
+
+  border: none;
+  transition: background-color 0.3s, color 0.3s;
   &:hover {
-    background-color: #f0f0f0;
+    // filter: brightness(90%); // hover 시에 색 좀 어둡게
   }
+`;
+const DayNumber = styled.div`
+  margin: auto auto; // 좌우 자동 마진
+  width: 22px;
+  height: 22px;
+  padding: 1px;
+  // background-color: #263a73;
+  justify-content: center; /* 가로 정렬 */
+
+  text-align: center;
+  border: none;
+  border-radius: 5px;
+  // transition: background-color 0.3s, color 0.3s;
 `;
 
 const TimeSelection = styled.div`
@@ -233,9 +317,9 @@ const TimeSelection = styled.div`
 `;
 
 const TimeRow = styled.div`
-  height: 60px;
+  height: 50px;
   margin-bottom: 20px;
-  width: 620px;
+  width: 550px;
   display: flex;
   gap: 2px;
 
@@ -266,6 +350,9 @@ const TimeSlot = styled.div`
   background-color: ${(props) => (props.selected ? '#263A73' : '#F6F7F8')};
   border-radius: 5px;
   transition: background-color 0.3s;
+  &:hover {
+    filter: brightness(90%); // hover 시에 색 좀 어둡게
+  }
 `;
 
 const TimeTick = styled.div`

@@ -26,11 +26,11 @@ const DocumentTable = ({ data }) => {
         <Table>
           <thead>
             <tr>
-              <Th>구분</Th>
+              <Th style={{ textAlign: "start" }}>구분</Th>
               <Th>신청 강의실</Th>
               <Th>신청 날짜</Th>
               <Th>신청 내용</Th>
-              <Th>상태</Th>
+              <Th style={{ textAlign: "end", paddingRight: "45px" }}>상태</Th>
             </tr>
           </thead>
           <tbody>
@@ -110,10 +110,10 @@ const Th = styled.th`
 `;
 
 const Td = styled.td`
-  padding: 12px;
+  padding: 8px;
   border-bottom: 1px solid rgba(0, 0, 0, 0.2);
   text-align: center;
-  font-size: 13px;
+  font-size: 15px;
 `;
 
 const ButtonContainer = styled.div`
