@@ -2,11 +2,14 @@ import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import khu from "../assets/images/KHU.png";
 import kyunghee from "../assets/images/KYUNGHEEUNIV.png";
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useContext } from "react";
+import { UserContext } from "../context/userContext";
 
 // 모든 페이지에 있을 헤더
 const Header = ({ role }) => {
   const navigate = useNavigate();
+  // 로그인 정보 받아오기 -> Context로 전역으로 접근 및 사용 가능
+  const { userData, setUserData } = useContext(UserContext);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false); // 문서보관함을 눌렀을 때
   const dropdownRef = useRef(null); // 드롭다운 바깥 클릭 감지를 위한 ref 임.
 
@@ -16,7 +19,7 @@ const Header = ({ role }) => {
 
   const handleMenuClick = (path) => {
     setIsDropdownOpen(false);
-    navigate(path); // 여기서 이동?
+    navigate(path);
   };
 
   // 문서보관함 외부 클릭 시 닫히게 처리
@@ -32,6 +35,19 @@ const Header = ({ role }) => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  // 로그인 또는 로그아웃
+  const handleAuthClick = () => {
+    if (userData) {
+      // 로그아웃 처리: localStorage 초기화 및 Context 초기화
+      localStorage.removeItem("user");
+      localStorage.removeItem("role");
+      setUserData(null);
+      navigate("/");
+    } else {
+      navigate("/");
+    }
+  };
 
   return (
     <>
@@ -102,7 +118,9 @@ const Header = ({ role }) => {
             </MilestoneWrapper>
           </MilestoneContainer>
           <ButtonContainer>
-            <Button>로그인</Button>
+            <Button onClick={handleAuthClick}>
+              {userData ? "로그아웃" : "로그인"}
+            </Button>{" "}
             <Button>ENG</Button>
           </ButtonContainer>
         </div>
