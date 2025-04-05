@@ -26,6 +26,7 @@ const AppliedContent = () => {
   const item = location.state?.item;
   const applicationId = item.applicationId;
   console.log("item", item);
+  console.log("application", item);
   const [applicationDetail, setApplicationDetail] = useState(null); // 신청 상세 정보 상태 추가
 
   useEffect(() => {
