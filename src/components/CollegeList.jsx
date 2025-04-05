@@ -1,27 +1,27 @@
-import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import styled from 'styled-components';
-import axios from 'axios';
-import pleImage from '../assets/images/maxple.png';
-import dateIcon from '../assets/images/date_icon.png';
-import starttimeIcon from '../assets/images/starttime_icon.png';
+import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import axios from "axios";
+import pleImage from "../assets/images/maxple.png";
+import dateIcon from "../assets/images/date_icon.png";
+import starttimeIcon from "../assets/images/starttime_icon.png";
 
 // 날짜, 시작시간, 끝시간 라이브러리
-import DatePicker from 'react-datepicker';
-import 'react-datepicker/dist/react-datepicker.css';
-import { createGlobalStyle } from 'styled-components';
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { createGlobalStyle } from "styled-components";
 
 const colleges = [
-  { id: 1, name: '공과대학관' },
-  { id: 2, name: '전자정보대학관' },
-  { id: 3, name: '응용과학대학관', value: 'AppliedScience' },
-  { id: 4, name: '소프트웨어융합대학관', value: 'SoftwareConvergence' },
-  { id: 5, name: '생명과학대학관' },
-  { id: 6, name: '국제대학관' },
-  { id: 7, name: '외국어대학관' },
-  { id: 8, name: '예술디자인대학관' },
-  { id: 9, name: '체육대학관' },
-  { id: 10, name: '국제경영대학관' },
+  { id: 1, name: "공과대학관" },
+  { id: 2, name: "전자정보대학관" },
+  { id: 3, name: "응용과학대학관", value: "AppliedScience" },
+  { id: 4, name: "소프트웨어융합대학관", value: "SoftwareConvergence" },
+  { id: 5, name: "생명과학대학관" },
+  { id: 6, name: "국제대학관" },
+  { id: 7, name: "외국어대학관" },
+  { id: 8, name: "예술디자인대학관" },
+  { id: 9, name: "체육대학관" },
+  { id: 10, name: "국제경영대학관" },
 ];
 
 const CollegeList = () => {
@@ -29,14 +29,14 @@ const CollegeList = () => {
   const navigate = useNavigate();
   // 페이지 화면 시작을 "소프트웨어융합대학"으로 설정
   const defaultCollege = colleges.find(
-    (college) => college.value === 'SoftwareConvergence'
+    (college) => college.value === "SoftwareConvergence"
   );
   const [selectedCollege, setSelectedCollege] = useState(
     defaultCollege?.id || null
   );
-  const [date, setDate] = useState('');
-  const [startTime, setStartTime] = useState('');
-  const [endTime, setEndTime] = useState('');
+  const [date, setDate] = useState("");
+  const [startTime, setStartTime] = useState("");
+  const [endTime, setEndTime] = useState("");
   // 선택가능한 시간대 리스트 생성(30분 간격)
   const includedTimes = [18, 18.5, 19, 19.5, 20, 20.5, 21, 21.5, 22].map(
     (t) => {
@@ -58,19 +58,19 @@ const CollegeList = () => {
 
   const handleSearch = async () => {
     if (!date || !startTime || !endTime) {
-      alert('날짜와 시간을 모두 선택해주세요.');
+      alert("날짜와 시간을 모두 선택해주세요.");
       return;
     }
 
     // 날짜 형식: YYYY-MM-DD
     const formattedDate = `${date.getFullYear()}-${(date.getMonth() + 1)
       .toString()
-      .padStart(2, '0')}-${date.getDate().toString().padStart(2, '0')}`;
+      .padStart(2, "0")}-${date.getDate().toString().padStart(2, "0")}`;
 
     // 시간 형식: HH:mm:ss
     const formatTime = (time) => {
-      const hour = time.getHours().toString().padStart(2, '0');
-      const minute = time.getMinutes().toString().padStart(2, '0');
+      const hour = time.getHours().toString().padStart(2, "0");
+      const minute = time.getMinutes().toString().padStart(2, "0");
       return `${hour}:${minute}:00`;
     };
 
@@ -79,7 +79,7 @@ const CollegeList = () => {
 
     try {
       const response = await axios.get(
-        'https://itsmeweb.store/api/classroom/available',
+        "https://itsmeweb.store/api/classroom/available",
         {
           params: {
             date: formattedDate,
@@ -87,7 +87,7 @@ const CollegeList = () => {
             endTime: formattedEndTime,
           },
           headers: {
-            accept: 'application/json',
+            accept: "application/json",
           },
         }
       );
@@ -100,7 +100,7 @@ const CollegeList = () => {
         setIsSearching(true);
       }
     } catch (err) {
-      console.error('예약 가능 강의실 조회 실패:', err);
+      console.error("예약 가능 강의실 조회 실패:", err);
       setClassroomList([]);
       setIsSearching(true);
     }
@@ -125,14 +125,14 @@ const CollegeList = () => {
         const res = await axios.get(
           `https://itsmeweb.store/api/classroom?classroomBuilding=${college.value}`
         );
-        if (res.data.result === 'SUCCESS') {
+        if (res.data.result === "SUCCESS") {
           setClassroomList(res.data.data.roomPreviewInfos);
         } else {
-          console.error('API 오류:', res.data.error?.message);
+          console.error("API 오류:", res.data.error?.message);
           setClassroomList([]);
         }
       } catch (err) {
-        console.error('요청 실패:', err);
+        console.error("요청 실패:", err);
         setClassroomList([]);
       }
     } else {
@@ -144,11 +144,11 @@ const CollegeList = () => {
 
   return (
     // 헤더 제외 높이를 최대 높이라 간주
-    <div style={{ display: 'flex', height: 'calc(100vh - 200px)' }}>
+    <div style={{ display: "flex", height: "calc(100vh - 200px)" }}>
       {/* Sidebar */}
       <Sidebar>
         <Title>단과대 목록</Title>
-        <hr style={{ color: '#868686', width: '90%' }}></hr>
+        <hr style={{ color: "#868686", width: "90%" }}></hr>
         {colleges.map((college) => (
           <CollegeButton
             key={college.id}
@@ -216,7 +216,7 @@ const CollegeList = () => {
                     onClick={() => {
                       navigate(`/home/${selectedCollege}/${room.classroomId}`, {
                         state: {
-                          collegeName: selectedCollegeObj?.name || '검색결과',
+                          collegeName: selectedCollegeObj?.name || "검색결과",
                           classroomInfo: {
                             id: room.classroomId,
                             image: room.classroomImage,
@@ -231,42 +231,42 @@ const CollegeList = () => {
                       src={room.classroomImage}
                       alt={`${room.classroomNumber}호`}
                       style={{
-                        width: '345px',
-                        height: '180px',
-                        objectFit: 'cover',
-                        borderRadius: '8px',
+                        width: "400px",
+                        height: "180px",
+                        objectFit: "cover",
+                        borderRadius: "8px",
                       }}
                     />
                     <p
                       style={{
-                        fontSize: '16px',
-                        fontWeight: 'bold',
-                        marginBottom: '-8px',
+                        fontSize: "16px",
+                        fontWeight: "bold",
+                        marginBottom: "-8px",
                       }}
                     >
-                      {room.classroomNumber}호{' '}
+                      {room.classroomNumber}호{" "}
                       {selectedCollegeObj?.name
                         ? `| ${selectedCollegeObj.name}`
-                        : ''}
+                        : ""}
                     </p>
                     <div
                       style={{
-                        paddingTop: '6px',
-                        display: 'flex',
-                        alignItems: 'baseline',
-                        height: '26px',
+                        paddingTop: "6px",
+                        display: "flex",
+                        alignItems: "baseline",
+                        height: "26px",
                       }}
                     >
                       <img
                         src={pleImage}
                         alt="인원"
                         style={{
-                          width: '13px',
-                          height: '13px',
-                          marginRight: '5px',
+                          width: "13px",
+                          height: "13px",
+                          marginRight: "5px",
                         }}
                       />
-                      <p style={{ fontSize: '13px' }}>
+                      <p style={{ fontSize: "13px" }}>
                         최대 {room.classroomCapacity}명
                       </p>
                     </div>
@@ -275,10 +275,10 @@ const CollegeList = () => {
               </ClassroomGrid>
             </>
           ) : (
-            <p style={{ color: '#6b7280' }}>
+            <p style={{ color: "#6b7280" }}>
               {isSearching
-                ? '조건에 맞는 강의실이 없습니다.'
-                : '단과대를 선택해주세요.'}
+                ? "조건에 맞는 강의실이 없습니다."
+                : "단과대를 선택해주세요."}
             </p>
           )}
         </Content>
@@ -312,13 +312,13 @@ const CollegeButton = styled.button`
   padding: 15px 16px 15px 30px; // 왼쪽 여백만 늘려서 텍스트 들여쓰기
   margin-bottom: 8px;
   border: none;
-  background: ${(props) => (props.$active ? '#EFF2F6' : '#fff')};
-  color: ${(props) => (props.$active ? '#263A73' : '#868686')};
+  background: ${(props) => (props.$active ? "#EFF2F6" : "#fff")};
+  color: ${(props) => (props.$active ? "#263A73" : "#868686")};
   font-size: 18px;
-  font-weight: ${(props) => (props.$active ? 'bold' : 'normal')};
+  font-weight: ${(props) => (props.$active ? "bold" : "normal")};
   cursor: pointer;
   border-right: ${(props) =>
-    props.$active ? '4px solid #263A73' : '4px solid transparent'};
+    props.$active ? "4px solid #263A73" : "4px solid transparent"};
   border-radius: 0;
   transition: 0.3s;
 
