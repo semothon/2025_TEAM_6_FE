@@ -4,17 +4,21 @@ import { useNavigate } from "react-router-dom";
 import rightArrow from "../assets/images/rightArrow.png";
 import { UserContext } from "../context/userContext";
 import Modal from "../components/Modal";
-
 import axios from "axios";
 
 const DocumentTable = ({ data }) => {
   const navigate = useNavigate();
   const [selectedItem, setSelectedItem] = useState(null);
+  // selectedItem.applicationId = applicationId!!!!!!!!!
   const [timeInfo, setTimeInfo] = useState({
     applicationStart: "",
     applicationEnd: "",
   });
   const { userData } = useContext(UserContext);
+
+  // applicationId
+  // const applicationId = data.applicationId;
+  console.log(data);
 
   const [attachFile, setAttachFile] = useState(null);
   const [selectedOne, setSelectedOne] = useState([]);
@@ -22,6 +26,8 @@ const DocumentTable = ({ data }) => {
   const [isUploading, setIsUploading] = useState(false);
   const [uploadUrl, setUploadUrl] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
+  // hover에 대한 상태 추가
+  const [hoveredItem, setHoveredItem] = useState(null);
 
   useEffect(() => {
     const fetchTimeInfo = async () => {
@@ -134,6 +140,19 @@ const DocumentTable = ({ data }) => {
     }
   };
 
+  // 링크 복사 함수
+  const handleCopyLink = async (applicationId) => {
+    const url = `https://kh-application-share-view.vercel.app/?id=${applicationId}`;
+
+    try {
+      await navigator.clipboard.writeText(url);
+      alert("링크가 클립보드에 복사되었습니다.");
+    } catch (err) {
+      alert("링크 복사에 실패했습니다.");
+      console.error(err);
+    }
+  };
+
   return (
     <>
       <TableContainer>
@@ -180,11 +199,25 @@ const DocumentTable = ({ data }) => {
                     item.status === "선택" ? (
                       <ApprovalButton
                         selected={selectedItem === item}
-                        onClick={() =>
-                          item.status === "선택" ? showInfo(item) : null
+                        hovered={hoveredItem === item} // 🔥 이 줄 추가
+                        onMouseEnter={() =>
+                          item.status === "승인 대기" && setHoveredItem(item)
                         }
+                        onMouseLeave={() => setHoveredItem(null)}
+                        onClick={() => {
+                          if (item.status === "선택") {
+                            showInfo(item);
+                          } else if (
+                            item.status === "승인 대기" &&
+                            hoveredItem === item
+                          ) {
+                            handleCopyLink(item.applicationId);
+                          }
+                        }}
                       >
-                        {item.status}
+                        {hoveredItem === item && item.status === "승인 대기"
+                          ? "링크 복사"
+                          : item.status}{" "}
                       </ApprovalButton>
                     ) : (
                       <RefusalButton>{item.status}</RefusalButton>
@@ -343,8 +376,10 @@ const ButtonBackPage = styled.button`
   `;
 
 const ApprovalButton = styled.button`
-  background-color: ${({ selected }) => (selected ? "#263a73" : "white")};
-  color: ${({ selected }) => (selected ? "white" : "#263a73")};
+  background-color: ${({ selected, hovered }) =>
+    hovered ? "#263a73" : selected ? "#263a73" : "white"};
+  color: ${({ selected, hovered }) =>
+    hovered || selected ? "white" : "#263a73"};
   padding: 8px 10px;
   border: 1px solid #263a73;
   cursor: pointer;
@@ -355,6 +390,7 @@ const ApprovalButton = styled.button`
   align-items: center;
   font-weight: bold;
   font-size: 12px;
+  transition: background-color 0.2s, color 0.2s;
 `;
 
 const RefusalButton = styled.button`
