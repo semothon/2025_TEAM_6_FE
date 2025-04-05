@@ -73,6 +73,8 @@ const Reservation = () => {
     }
   };
 
+  // console.log("uploadResponse:", uploadResponse.data);
+
   // 첨부파일 이름들을 보여줄 UI
   const attachFile =
     selectedOne &&
@@ -116,12 +118,12 @@ const Reservation = () => {
       applicationEnd: formattedEndTime,
       // uploadResponse의 필드를 참조하여 payload에 적용
       applicationPurpose: uploadResponse
-        ? uploadResponse.applicationPurspose
+        ? uploadResponse.data.applicationPurspose
         : "",
       applicationParticipants: uploadResponse
-        ? uploadResponse.applicationParticipants
+        ? uploadResponse.data.applicationParticipants
         : "", // 참여 인원
-      applicationUrl: uploadResponse ? uploadResponse.applicationUrl : "", // 업로드된 파일의 URL (없으면 빈 문자열)
+      applicationUrl: uploadResponse ? uploadResponse.data.applicationUrl : "", // 업로드된 파일의 URL (없으면 빈 문자열)
     };
     console.log("applicationStart", payload.applicationStart);
 

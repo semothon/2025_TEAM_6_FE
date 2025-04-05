@@ -3,6 +3,7 @@ import styled from "styled-components";
 import Header from "../components/Header";
 import { useRef, useState, useEffect } from "react";
 import { VscClose } from "react-icons/vsc";
+import axios from "axios";
 
 import * as pdfjsLib from "pdfjs-dist/legacy/build/pdf"; // pdf 읽는 라이브러리 불러오기
 import workerSrc from "pdfjs-dist/legacy/build/pdf.worker.min.js?url"; // 버전 이슈로 Web Worker을 사용
@@ -13,18 +14,54 @@ pdfjsLib.GlobalWorkerOptions.workerSrc = workerSrc; //workerSrc는 실제로 "/a
 // pdf.js는 단순 html처럼 바로 렌더링 할 수가 없어서 worker를 통해 백그라운드에서 pdf 데이터를 해석한 뒤,
 // 그걸 화면에 canvas로 그려야 된다 함.
 
+// item의 형태
+// applicationId: item.applicaitonId,
+// applicationDate: item.applicationDate,
+// classroom: item.classroom,
+// semester: item.semester,
+// status: "승인",
+
 const AppliedContent = () => {
   const location = useLocation();
+  const item = location.state?.item;
+  const applicationId = item.applicationId;
+  console.log("applicationId", applicationId);
   // pdf 첫 페이지를 캔버스로 이미지로 만든 url을 저장함.
   const [pdfPreviewUrl, setPdfPreviewUrl] = useState(null);
+  const [applicationDetail, setApplicationDetail] = useState(null); // 신청 상세 정보 상태 추가
 
   useEffect(() => {
-    const pdfUrl = location.state?.pdfUrl;
-    console.log(pdfUrl);
-    if (pdfUrl) {
-      renderPdfFromUrl(pdfUrl);
+    if (applicationId) {
+      fetchApplicationDetail(applicationId);
     }
-  }, [location.state]);
+  }, [item]);
+
+  // 신청 상세 정보 요청
+  const fetchApplicationDetail = async () => {
+    try {
+      const response = await axios.get(
+        "https://itsmeweb.store/api/application/detail",
+        {
+          params: { applicationId },
+          headers: { accept: "application/json" },
+        }
+      );
+      console.log("response", response);
+      if (response.data.result === "SUCCESS") {
+        const detail = response.data.data;
+        setApplicationDetail(detail);
+
+        // 응답받은 URL로 PDF 미리보기 그리기
+        if (detail.applicationUrl) {
+          renderPdfFromUrl(detail.applicationUrl);
+        }
+      } else {
+        console.error("에러 발생:", response.data.error);
+      }
+    } catch (error) {
+      console.error("요청 실패:", error);
+    }
+  };
 
   // PDF URL의 첫 페이지를 캔버스로 렌더링해서 이미지로 저장하는 함수
   const renderPdfFromUrl = async (url) => {
@@ -49,11 +86,58 @@ const AppliedContent = () => {
     }
   };
 
+  console.log("applicationDetail", applicationDetail);
+
   return (
     <>
       <Header role="USER" />
       <Container>
-        {/* PDF 미리보기 영역 */}
+        {/* 신청 상세 정보 */}
+        {applicationDetail && (
+          <>
+            <Title>신청 정보</Title>
+            <InfoContainer>
+              <InfoRow>
+                <Label>신청자</Label> {applicationDetail.userName}
+              </InfoRow>
+              <InfoRow>
+                <Label>전화번호</Label> {applicationDetail.userNumber}
+              </InfoRow>
+              <InfoRow>
+                <Label>강의실</Label> {applicationDetail.classroom}
+              </InfoRow>
+              <InfoRow>
+                <Label>사용 목적</Label> {applicationDetail.applicationPurpose}
+              </InfoRow>
+              <DoubleInfoRow>
+                <InfoBlock>
+                  <Label>사용 일자</Label>{" "}
+                  {applicationDetail.applicationUseDate}
+                </InfoBlock>
+                <InfoBlock>
+                  <Label>사용 시간</Label>
+                  {applicationDetail.applicationStart} ~{" "}
+                  {applicationDetail.applicationEnd}
+                </InfoBlock>
+              </DoubleInfoRow>
+              <DoubleInfoRow>
+                <InfoBlock>
+                  <Label>신청일</Label> {applicationDetail.applicationDate}
+                </InfoBlock>
+                <InfoBlock>
+                  <Label>상태</Label> {applicationDetail.applicationStatus}
+                </InfoBlock>
+              </DoubleInfoRow>
+              {applicationDetail.applicationRejectReason && (
+                <InfoRow>
+                  <Label>반려 사유</Label>{" "}
+                  {applicationDetail.applicationRejectReason}
+                </InfoRow>
+              )}
+            </InfoContainer>
+          </>
+        )}
+        {/* PDF 미리보기 */}
         {pdfPreviewUrl && (
           <PreviewWrapper>
             <h4>PDF 미리보기</h4>

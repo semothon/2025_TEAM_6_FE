@@ -15,11 +15,9 @@ const DocumentTable = ({ data }) => {
     }
   };
 
-  // 전달받는 data에 pdfUrl이 꼭 있어야 함!!!!
-  const showContent = () => {
-    // api 연결 전 임의로 넣어둔 것
-    const pdfUrl = "https://example.com/sample.pdf";
-    navigate("/applied-content", { state: { pdfUrl } });
+  const showContent = (item) => {
+    // console.log("item", item);
+    navigate("/applied-content", { state: { item } });
   };
 
   return (
@@ -39,11 +37,11 @@ const DocumentTable = ({ data }) => {
             {data.map((item, index) => (
               <tr key={index}>
                 <Td>대여</Td>
-                <Td>{item.room}</Td>
-                <Td>{item.date}</Td>
+                <Td>{item.classroom}</Td>
+                <Td>{item.applicationDate}</Td>
                 <Td>
                   <ButtonContainer>
-                    <Button onClick={showContent}>
+                    <Button onClick={() => showContent(item)}>
                       내용 보기
                       <img
                         src={rightArrow}
@@ -55,19 +53,19 @@ const DocumentTable = ({ data }) => {
                 </Td>
                 <Td>
                   <ButtonContainer>
-                    {item.message === "승인" ||
-                    item.message === "승인 대기" ||
-                    item.message === "선택" ? (
+                    {item.status === "승인" ||
+                    item.status === "승인 대기" ||
+                    item.status === "선택" ? (
                       <ApprovalButton
                         selected={selectedItem === item}
                         onClick={() =>
-                          item.message === "선택" ? showInfo(item) : null
+                          item.status === "선택" ? showInfo(item) : null
                         }
                       >
-                        {item.message}
+                        {item.status}
                       </ApprovalButton>
                     ) : (
-                      <RefusalButton>{item.message}</RefusalButton>
+                      <RefusalButton>{item.status}</RefusalButton>
                     )}
                   </ButtonContainer>
                 </Td>
@@ -80,9 +78,9 @@ const DocumentTable = ({ data }) => {
       {/* 선택된 항목 정보 출력 */}
       {selectedItem && (
         <InfoBox>
-          <p>신청 강의실: {selectedItem.room}</p>
-          <p>신청 날짜: {selectedItem.date}</p>
-          <p>신청 내용: {selectedItem.message}</p>
+          <p>신청 강의실: {selectedItem.classroom}</p>
+          <p>신청 날짜: {selectedItem.applicationDate}</p>
+          <p>신청 내용: {selectedItem.status}</p>
         </InfoBox>
       )}
     </>

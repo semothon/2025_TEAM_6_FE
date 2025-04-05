@@ -7,7 +7,7 @@ import axios from "axios";
 
 const Document = () => {
   const { userData } = useContext(UserContext);
-  console.log("userData: ", userData);
+  // console.log("userData: ", userData);
   //console.log(userData.data.userId);
 
   // 상태 관리: 진행중(승인 대기)와 완료된 신청 내역
@@ -20,7 +20,7 @@ const Document = () => {
     if (!userData) return;
 
     const userId = userData.userId;
-    console.log("userID:", userId);
+    // console.log("userID:", userId);
 
     const fetchData = async () => {
       try {
@@ -40,27 +40,36 @@ const Document = () => {
             headers: { accept: "application/json" },
           }),
         ]);
-        console.log("pendingRes", pendingRes);
+
+        // console.log("pendingRes", pendingRes);
         const pendingData = pendingRes.data?.data || [];
         const approvedData = approvedRes.data?.data || [];
         const rejectedData = rejectedRes.data?.data || [];
 
         const pendingMapped = pendingData.map((item) => ({
-          room: item.classroom,
-          date: item.applicationDate,
-          message: "승인 대기",
+          applicationId: item.applicaitonId,
+          applicationDate: item.applicationDate,
+          classroom: item.classroom,
+          semester: item.semester,
+          status: "승인 대기",
         }));
 
+        // console.log("pendingMapped", pendingMapped);
+
         const approvedMapped = approvedData.map((item) => ({
-          room: item.classroom,
-          date: item.applicationDate,
-          message: "승인",
+          applicationId: item.applicaitonId,
+          applicationDate: item.applicationDate,
+          classroom: item.classroom,
+          semester: item.semester,
+          status: "승인",
         }));
 
         const rejectedMapped = rejectedData.map((item) => ({
-          room: item.classroom,
-          date: item.applicationDate,
-          message: "반려",
+          applicationId: item.applicaitonId,
+          applicationDate: item.applicationDate,
+          classroom: item.classroom,
+          semester: item.semester,
+          status: "반려",
         }));
 
         setPendingData(pendingMapped);
